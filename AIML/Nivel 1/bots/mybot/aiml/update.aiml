@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml>
+<!-- File: update.aiml -->
+<!-- Author: DANIEL -->
+<!-- Last modified: marzo 13, 2016 -->
+<!--  -->
+<!-- This AIML file is part of the MYBOT 0.0.4 chat bot knowledge base. -->
+<!--  -->
+<!-- The MYBOT brain is Copyright &copy; 2016 by ugr. -->
+<!--  -->
+<!-- The MYBOT brain is released under the terms of the GNU Lesser General -->
+<!-- Public License, as published by the Free Software Foundation. -->
+<!--  -->
+<!-- This file is distributed WITHOUT ANY WARRANTY; without even the  -->
+<!-- implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   -->
+<!--  -->
+<!-- For more information see http://www.alicebot.org -->
+<!--  -->
+<category><pattern>PROGRAM VERSION</pattern>
+<template>Program AB 0.0.6.26 beta -- AI Foundation Reference AIML 2.1 implementation</template>
+</category>
+<category><pattern>BRAIN BUILD</pattern>
+<template>Sun Mar 13 20:34:43 CET 2016</template>
+</category>
+</aiml>

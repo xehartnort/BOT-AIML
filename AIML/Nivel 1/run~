@@ -1,0 +1,2 @@
+#!/bin/bash
+java -cp lib/Ab.jar Main bot=mybot action=chat trace=true morph=true

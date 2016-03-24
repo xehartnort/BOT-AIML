@@ -1,0 +1,10 @@
+url:http://www.alicebot.org
+name:Bota
+email:xehartnort@gmail.com
+gender:male
+botmaster:DANIEL
+organization:ugr
+version:0.0.4
+age:20
+job:estudiante
+
