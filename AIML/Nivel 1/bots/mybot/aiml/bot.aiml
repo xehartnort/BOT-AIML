@@ -304,43 +304,160 @@
 </category>
 
 <!--            FIN Nivel 0                      -->
+
+
 <!--            Nivel 1                          -->
 
-<!-- PELO -->
-<category> 
-  <pattern> 
-    TIENE <set>articulos</set> pelo <set>pelo</set>
+<!-- LISTA DE PERSONAJES -->
+<set name="Plista">
+  Alejandro Alfonso Antonio Cristina Gabriela Ivan Javier Juan Laura Luis Marco Maria Paco Pepe Sofia Sonia
+</set>
+
+<!-- PREGUNTA: ALGO JUGAR ALGO -->
+<!-- SELECCION DE PERSONAJE -->
+<category>
+  <pattern>
+    # jugar #
   </pattern>
   <template>
-    
-  </template>
-</category>
-  
-<!-- OJOS -->
-<category> 
-  <pattern> 
-    TIENE <set>articulos</set> ojos <set>ojos</set>
-  </pattern>
-  <template>
+  <!-- VARIABLES GLOBALES -->
+    <set name="personaje"> 
+      <random>
+        <li>Alejandro</li> <li>Alfonso</li> <li>Antonio</li> 
+        <li>Cristina</li> <li>Gabriela</li> <li>Ivan</li>
+        <li>Javier</li> <li>Juan</li> <li>Laura</li> <li>Luis</li>
+        <li>Marco</li> <li>Maria</li> <li>Pepe</li> <li>Sofia</li>
+        <li>Sonia</li>
+      </random>
+    </set>
+    <!-- ATRIBUTOS DEL PERSONAJE ESCOGIDO-->
+    <set name="Ppelo">
+      <map name="pelo"><get name="personaje"/></map>
+    </set>
+    <set name="Pojos">
+      <map name="ojos"><get name="personaje"/></map>
+    </set>
+    <set name="Ppiel">
+      <map name="piel"><get name="personaje"/></map>
+    </set>
+    <set name="Pbarba">
+      <map name="barba"><get name="personaje"/></map>
+    </set>
+    <set name="Pbigote">
+      <map name="bigote"><get name="personaje"/></map>
+    </set>
+    <set name="Pgafas">
+      <map name="gafas"><get name="personaje"/></map>
+    </set>
+    <set name="Psexo">
+      <map name="sexo"><get name="personaje"/></map>
+    </set>
   </template>
 </category>
 
-<!-- PIEL -->  
-<category> 
-  <pattern> 
-    TIENE <set>articulos</set> piel <set>piel</set>
+<!-- FUNCION: IF OP1 == OP2 THEN P1 ELSE P2 FI -->
+<category>
+  <pattern>
+    IF * == * THEN * ELSE *
   </pattern>
   <template>
+    <set var="OP1"><star index="1"/></set>
+    <set var="OP2"><star index="2"/></set>
+    <set var="P1"><star index="3"/></set>
+    <set var="P2"><star index="4"/></set>
+    <condition var="OP1">
+      <li><value><get var="OP2"/></value> 
+        <get var="P1"/>
+      </li>
+      <li>
+        <get var="P2"/>
+      </li>
+    </condition>
   </template>
 </category>
-  
-  
+
+<!-- PREGUNTA: TIENE EL/LA/LOS/LAS ALGO CARACTERISTICA -->
+<!-- ALGO: PELO, OJOS, PIEL -->
 <category> 
-  
+  <pattern> 
+    TIENE <set>articulos</set> * *
+  </pattern>
+  <template>
+    <set var="ALGO"><star index="2"/></set>
+    <set var="CARACTERISTICA"><star index="3"/></set>
+    <condition var="ALGO">
+      <li value="pelo">
+        <srai>
+          COMPARE <get var="CARACTERISTICA"/> WITH <get name="Ppelo"/> 
+        </srai>
+      </li>
+      <li value="ojos">
+        <srai>
+          COMPARE <get var="CARACTERISTICA"/> WITH <get name="Pojos"/>
+        </srai>
+      </li>
+      <li value="piel">
+        <srai>
+          COMPARE <get var="CARACTERISTICA"/> WITH <get name="Ppiel"/>
+        </srai>
+      </li>
+    </condition>
+  </template>
+</category>
+
+<!-- PREGUNTA: TIENE/LLEVA/USA ALGO -->
+<!-- ALGO: BARBA, BIGOTE, GAFAS -->
+<category> 
+  <pattern>
+    <set>verbos</set> #
+  </pattern>
+  <template>
+    <set var="ALGO"><star index="2"/></set>
+    <condition var="ALGO">
+      <li value="barba">
+        <srai>
+          COMPARE si WITH <get name="Pbarba"/>
+        </srai>
+      </li>
+      <li value="bigote">
+        <srai>
+          COMPARE si WITH <get name="Pbigote"/>
+        </srai>
+      </li>
+      <li value="gafas">
+        <srai>
+          COMPARE si WITH <get name="Pgafas"/>
+        </srai>
+      </li>
+    </condition>
+  </template>
+</category>
+
+<!-- PREGUNTA: ES HOMBRE/MUJER/PERSONAJE-->
+<category> 
+  <pattern>
+    ES <set>sexo</set>
+  </pattern>
+  <template>
+    <srai>
+      COMPARE <star/> WITH <get name="Psexo"/>
+    </srai>
+  </template>
+</category>
+
+<!-- PREGUNTA: ES PERSONAJE-->
+<category> 
+  <pattern>
+    ES <set>personajes</set>
+  </pattern>
+  <template>
+    <srai>
+      COMPARE <star/> WITH <get name="personaje"/>
+    </srai>
+  </template>
 </category>
 
 
 <!--            FIN Nivel 1                   -->
-
 
 </aiml>
