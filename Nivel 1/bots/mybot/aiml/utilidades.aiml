@@ -16,165 +16,306 @@
 <!--  -->
 <!-- For more information see http://www.alicebot.org -->
 <!--  -->
-<category><pattern>TOP * *</pattern>
-<template><star index="1"/></template>
+<!-- FUNCION QUE OBTIENE EL PRIMER ELEMENTO DE UNA LISTA-->
+<category>
+  <pattern>
+    TOP * #
+  </pattern>
+  <template>
+    <star index="1"/>
+  </template>
 </category>
-<category><pattern>TOP *</pattern>
-<template><star index="1"/></template>
+
+<category>
+  <pattern>
+    TOP
+  </pattern>
+  <template>
+    end
+  </template>
 </category>
-<category><pattern>TOP</pattern>
-<template>end</template>
+
+<!-- FUNCION QUE DEVUELVE LA LISTA SIN EL PRIMER ELEMENTO-->
+<category>
+  <pattern>
+    REMAIN * *
+  </pattern>
+  <template>
+    <star index="2"/>
+  </template>
 </category>
-<category><pattern>REMAIN * *</pattern>
-<template><star index="2"/></template>
+
+<category>
+  <pattern>
+    REMAIN *
+  </pattern>
+  <template>
+    end
+  </template>
 </category>
-<category><pattern>REMAIN *</pattern>
-<template>end</template>
+
+<category>
+  <pattern>
+    REMAIN
+  </pattern>
+  <template>
+    end
+  </template>
 </category>
-<category><pattern>REMAIN</pattern>
-<template>end</template>
-</category>
-<category><pattern>COUNT</pattern>
-<template>0</template>
-</category>
-<category><pattern>COUNT *</pattern>
-<template><think>
-            <set var="count">0</set>
-            <set var="list"><star/></set>
-            <set var="item"><srai>TOP <get var="list"/></srai></set>
+
+<!-- FUNCION QUE CUENTA EL NÚMERO DE ELEMENTOS DE UNA LISTA-->
+<category>
+  <pattern>
+    COUNT *
+  </pattern>
+  <template>
+    <think>
+    <set var="count">0</set>
+    <set var="list"><star/></set>
+    <set var="item"><srai>TOP <get var="list"/></srai></set>
+    </think>
+    <condition var="item">
+      <li value="end">
+        <get var="count"/>
+      </li>
+      <li>
+        <think>
+        <set var="count"><map><name>successor</name><get var="count"/></map></set>
+        <set var="list"><srai>REMAIN <get var="list"/></srai></set>
+        <set var="item"><srai>TOP <get var="list"/></srai></set>
         </think>
-        <condition var="item">
-            <li><value>end</value><get var="count"/></li>
-            <li>
-              <think>
-                  <set var="count"><map><name>successor</name><get var="count"/></map></set>
-                  <set var="list"><srai>REMAIN <get var="list"/></srai></set>
-                  <set var="item"><srai>TOP <get var="list"/></srai></set>
-              </think>
-              <loop/>
-            </li>
-        </condition></template>
+        <loop/>
+      </li>
+    </condition>
+  </template>
 </category>
-<category><pattern>FINDITEM * IN *</pattern>
-<template><think>
-            <set var="buscado"><star index="1"/></set>
-            <set var="lista"><star index="2"/></set>
-            <set var="item"><srai>TOP <get var="lista"/></srai></set>
-            <set var="count">1</set>
+
+<category>
+  <pattern>
+    COUNT
+  </pattern>
+  <template>
+    0
+  </template>
+</category>
+
+<!-- FUNCION QUE PROPORCIONA LA POSICIÓN DE UN ITEM EN UNA LISTA-->
+<category>
+  <pattern>
+    FINDITEM * IN *
+  </pattern>
+  <template>
+    <think>
+    <set var="buscado"><star index="1"/></set>
+    <set var="lista"><star index="2"/></set>
+    <set var="item"><srai>TOP <get var="lista"/></srai></set>
+    <set var="count">1</set>
+    </think>
+    <condition var="item">
+      <li value="end">
+        0
+      </li>
+      <li><value><get var="buscado"/></value>
+        <get var="count"/>
+      </li>
+      <li>
+        <think>
+        <set var="count"><map><name>successor</name><get var="count"/></map></set>
+        <set var="lista"><srai>REMAIN <get var="lista"/></srai></set>
+        <set var="item"><srai>TOP <get var="lista"/></srai></set>
         </think>
-        <condition var="item">
-          <li value="end">0</li>
-          <li><value><get var="buscado"/></value><get var="count"/></li>
-          <li>
-           <think><set var="count"><map><name>successor</name><get var="count"/></map></set></think>
-           <think><set var="lista"><srai>REMAIN <get var="lista"/></srai></set></think>
-           <think><set var="item"><srai>TOP <get var="lista"/></srai></set></think>
-           <loop/>
+        <loop/>
+      </li>
+    </condition>
+  </template>
+</category>
+
+<!-- FUNCIÓN QUE DADO UN NÚMERO OBTIENE UN ELEMENTO DE UNA LISTA-->
+<category>
+  <pattern>
+    SELECTITEM <set>number</set> IN *
+  </pattern>
+  <template>
+    <think>
+    <set var="count"><star/></set>
+    <set var="list"><star index="2"/></set>
+    <set var="item"><srai>TOP <get var="list"/></srai></set>
+    </think>
+    <condition var="count">
+      <li value="0">
+        unknown
+      </li>
+      <li value="1">
+        <get var="item"/>
+      </li>
+      <li>
+        <think>
+        <set var="count"><map><name>predecessor</name><get var="count"/></map></set>
+        <set var="list"><srai>REMAIN <get var="list"/></srai></set>
+        <set var="item"><srai>TOP <get var="list"/></srai></set>
+        </think>
+        <loop/>
+      </li>
+    </condition>
+  </template>
+</category>
+
+<!-- FUNCIÓN QUE BORRA UN ELEMENTO DE UNA POSICIÓN DE UNA LISTA-->
+<category>
+  <pattern>
+    REMOVEITEM <set>number</set> IN *
+  </pattern>
+  <template>
+    <think>
+    <set var="count"><star/></set>
+    <set var="list"><star index="2"/></set>
+    <set var="list_1"/>
+    <set var="item"><srai>TOP <get var="list"/></srai></set>
+    <set var="list"><srai>REMAIN <get var="list"/></srai></set>
+    </think>
+    <condition var="count">
+      <li value="0">
+        unknown
+      </li>
+      <li value="1">
+        <get var="list_1"/> <get var="list"/>
+      </li>
+      <li>
+        <think>
+        <set var="count"><map><name>predecessor</name><get var="count"/></map></set>
+        <set var="list_1"><get var="list_1"/> <get var="item"/></set>
+        <set var="item"><srai>TOP <get var="list"/></srai></set>
+        <set var="list"><srai>REMAIN <get var="list"/></srai></set>
+        <condition var="list">
+          <li value="end">
+            <set var="list"/>
           </li>
-        </condition></template>
-</category>
-<category><pattern>SELECTITEM <set>number</set> IN *</pattern>
-<template><think>
-            <set var="count"><star/></set>
-            <set var="list"><star index="2"/></set>
-            <set var="item"><srai>TOP <get var="list"/></srai></set>
-        </think>
-        <condition var="count">
-            <li value="0">unknown</li>
-            <li><value>1</value><get var="item"/></li>
-            <li>
-              <think>
-                  <set var="count"><map><name>predecessor</name><get var="count"/></map></set>
-               <think><set var="list"><srai>REMAIN <get var="list"/></srai></set></think>
-               <think><set var="item"><srai>TOP <get var="list"/></srai></set></think>
-              </think>
-              <loop/>
-            </li>
-        </condition></template>
-</category>
-<category><pattern>REMOVEITEM <set>number</set> IN *</pattern>
-<template><think>
-            <set var="count"><star/></set>
-            <set var="list"><star index="2"/></set>
-            <set var="list_1"/>
-            <set var="item"><srai>TOP <get var="list"/></srai></set>
-            <set var="list"><srai>REMAIN <get var="list"/></srai></set>
-        </think>
-        <condition var="count">
-            <li><value>1</value> <get var="list_1"/> <get var="list"/></li>
-            <li>
-               <think>
-                  <set var="count"><map><name>predecessor</name><get var="count"/></map></set>
-                  <set var="list_1"><get var="list_1"/> <get var="item"/></set>
-                  <set var="item"><srai>TOP <get var="list"/></srai></set>
-                  <set var="list"><srai>REMAIN <get var="list"/></srai></set>
-                  <condition var="list">
-                      <li value="end"><set var="list"/></li>
-                  </condition>
-                  <condition var="item">
-                      <li value="end"><set var="item"/></li>
-                  </condition>
-                </think>
-              <loop/>
-            </li>
-        </condition></template>
-</category>
-<category><pattern>ADDITEM * IN *</pattern>
-<template><think><set var="set"><star index="2"/></set></think>
-        <think><set var="pos"><srai>FINDITEM <star/> IN <get var="set"/></srai></set></think>
-        <condition var="pos">
-            <li value="0">
-                <think><set var="set"><star/> <get var="set"/></set></think>
-            </li>
         </condition>
-        <get var="set"/></template>
-</category>
-<category><pattern>RANDOM <set>number</set></pattern>
-<template><think>
-            <set var="count"><star/></set>
-            <set var="elegido">1</set>
+        <condition var="item">
+          <li value="end">
+            <set var="item"/>
+          </li>
+        </condition>
         </think>
-        <condition var="count">
-            <li><value>1</value> <get var="elegido"/></li>
-            <li>
-                <think>
-                <random>
-                    <li>
-                        <set var="count"><map><name>predecessor</name><get var="count"/></map></set>
-                        <set var="elegido"><map><name>successor</name><get var="elegido"/></map></set>
-                    </li>
-                    <li>
-                        <set var="count"><map><name>predecessor</name><get var="count"/></map></set>
-                    </li>
-                    <li>
-                        <set var="count"><map><name>predecessor</name><get var="count"/></map></set>
-                    </li>
-                </random>
-                </think>
-                <loop/>
-            </li>
-        </condition></template>
+        <loop/>
+      </li>
+    </condition>
+  </template>
 </category>
-<category><pattern>ITERATE *</pattern>
-<template><think><set name="iterator"><star/></set></think>
-	<srai>NEXT</srai></template>
+
+<!-- FUNCION QUE AÑADE UN ELEMENTO AL PRINCIPIO DE UNA LISTA SI ESTE NO ESTÁ PREVIAMENTE-->
+<category>
+  <pattern>
+    ADDITEM * IN *
+  </pattern>
+  <template>
+    <think>
+    <set var="set"><star index="2"/></set>
+    <set var="pos"><srai>FINDITEM <star/> IN <get var="set"/></srai></set>
+    </think>
+      <condition var="pos">
+        <li value="0">
+          <think>
+          <set var="set"><star/> <get var="set"/></set>
+          </think>
+        </li>
+      </condition>
+    <get var="set"/>
+  </template>
 </category>
-<category><pattern>NEXT</pattern>
-<template><condition name="iterator">
-	    <li value="end">end</li>
-		<li>
-           <srai>TOP <get name="iterator"/></srai>
-           <think>
-               <set name="iterator"><srai>REMAIN <get name="iterator"/></srai></set>
-           </think>
-		</li>
-	</condition></template>
+
+<!-- FUNCION GENERADORA DE NÚMEROS ALEATORIOS-->
+<!-- NOTA: NO FUNCIONA -->
+<category>
+  <pattern>
+    RANDOM <set>number</set>
+  </pattern>
+  <template>
+    <think>
+    <set var="count"><star/></set>
+    <set var="elegido">1</set>
+    </think>
+    <condition var="count">
+      <li value="1"> 
+        <get var="elegido"/>
+      </li>
+      <li>
+        <think>
+        <random>
+          <li>
+            <set var="count"><map><name>predecessor</name><get var="count"/></map></set>
+            <set var="elegido"><map><name>successor</name><get var="elegido"/></map></set>
+          </li>
+          <li>
+            <set var="count"><map><name>predecessor</name><get var="count"/></map></set>
+          </li>
+          <li>
+            <set var="count"><map><name>predecessor</name><get var="count"/></map></set>
+          </li>
+        </random>
+        </think>
+        <loop/>
+      </li>
+    </condition>
+  </template>
 </category>
-<category><pattern>COMPARE * WITH *</pattern>
-<template><think><set var="local"><uppercase><star index="2"/></uppercase></set></think>
-        <condition var="local">
-            <li><value><uppercase><star/></uppercase></value>YES</li>
-            <li>NO</li>
-        </condition></template>
+
+<!-- FUNCION ITERADORA -->
+<category>
+  <pattern>
+    ITERATE *
+  </pattern>
+  <template>
+    <think>
+    <set var="iterator"><star/></set>
+    </think>
+	  <srai>
+	    NEXT <get var="iterador"/>
+	  </srai>
+	</template>
+</category>
+
+<!-- FUNCION ITERADORA SIGUIENTE-->
+<category>
+  <pattern>
+    NEXT *
+  </pattern>
+  <template>
+    <think>
+    <set var="iterator"><star/></set>
+    </think>
+    <condition var="iterator">
+	    <li value="end">
+	      end
+	    </li>
+		  <li>
+        <srai>
+          TOP <get name="iterator"/>
+        </srai>
+        <think>
+          <set name="iterator"><srai>REMAIN<get name="iterator"/></srai></set>
+        </think>
+		  </li>
+	  </condition>
+  </template>
+</category>
+
+<!-- FUNCION COMPARADORA-->
+<category>
+  <pattern>
+    COMPARE * WITH *
+  </pattern>
+  <template>
+    <think>
+    <set var="local"><star index="2"/></set>
+    </think>
+      <condition var="local">
+        <li><value><star/></value>
+          SI
+        </li>
+        <li>
+          NO
+        </li>
+      </condition></template>
 </category>
 </aiml>
