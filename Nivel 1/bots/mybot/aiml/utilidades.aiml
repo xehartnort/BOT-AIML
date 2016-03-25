@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aiml>
-<!-- File: utilidades.aiml -->
-<!-- Author: DANIEL -->
-<!-- Last modified: marzo 13, 2016 -->
-<!--  -->
-<!-- This AIML file is part of the MYBOT 0.0.4 chat bot knowledge base. -->
-<!--  -->
-<!-- The MYBOT brain is Copyright &copy; 2016 by ugr. -->
-<!--  -->
-<!-- The MYBOT brain is released under the terms of the GNU Lesser General -->
-<!-- Public License, as published by the Free Software Foundation. -->
-<!--  -->
-<!-- This file is distributed WITHOUT ANY WARRANTY; without even the  -->
-<!-- implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   -->
-<!--  -->
-<!-- For more information see http://www.alicebot.org -->
-<!--  -->
 <!-- FUNCION QUE OBTIENE EL PRIMER ELEMENTO DE UNA LISTA-->
 <category>
   <pattern>
@@ -225,7 +209,6 @@
 </category>
 
 <!-- FUNCION GENERADORA DE NÚMEROS ALEATORIOS-->
-<!-- NOTA: NO FUNCIONA -->
 <category>
   <pattern>
     RANDOM <set>number</set>

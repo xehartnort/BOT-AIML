@@ -358,7 +358,7 @@
       <map name="sexo"><get name="personaje"/></map>
     </set>
     </think>
-    A jugar 
+      A jugar 
   </template>
 </category>
 
@@ -472,7 +472,387 @@
 
 <!--            FIN Nivel 1                   -->
 
+
 <!--            Nivel 2                       -->
+
+<!-- INICIO DEL NIVEL 2 -->
+<category>
+  <pattern>
+    # juego2 #
+  </pattern>
+  <template>
+    <set name="topic">sexo</set>
+    es hombre
+  </template>
+  
+</category>
+
+<!-- BOT PREGUNTA: ES HOMBRE?-->
+<topic name="sexo">
+<!-- SI ES HOMBRE -->
+  <category>
+    <that> 
+      Es hombre
+    </that>
+    <pattern>
+      Si
+    </pattern>
+    <template>
+      <set name="topic">barba</set>
+      <set name="Psexo">hombre</set>
+      tiene barba
+    </template>
+  </category>
+
+<!-- SI ES MUJER -->
+  <category>
+    <that> 
+      Es mujer
+    </that>
+    <pattern>
+      No
+    </pattern>
+    <template>
+      <set name="topic">gafas</set>
+      <set name="Psexo">mujer</set>
+      <set name="Pbarba">no</set>
+      <set name="Pbigote">no</set>
+      tiene gafas
+    </template>
+  </category>
+</topic>
+
+<!-- BOT PREGUNTA: TIENE BARBA? -->
+<topic name="barba">
+<!-- SI TIENE BARBA-->
+  <category>
+    <that>
+      tiene barba
+    </that>
+    <pattern>
+      Si
+    </pattern>
+    <template>
+      <set name="topic">barba</set>
+      <set name="Pbarba">si</set>
+      tiene bigote
+    </template>
+  </category>
+
+<!-- NO TIENE BARBA-->
+  <category>
+    <that>
+      tiene barba
+    </that>
+    <pattern>
+      No
+    </pattern>
+    <template>
+      <set name="topic">barba</set>
+      <set name="Pbarba">no</set>
+      tiene bigote
+    </template>
+  </category>
+</topic>
+
+<!-- BOT PREGUNTA: TIENE BIGOTE? -->
+<topic name="bigote">
+<!-- SI TIENE BIGOTE-->
+  <category>
+    <that>
+      tiene bigote
+    </that>
+    <pattern>
+      si
+    </pattern>
+    <template>
+      <set name="topic">gafas</set>
+      <set name="Pbigote">si</set>
+      tiene gafas
+    </template>
+  </category>
+  
+<!-- NO TIENE BIGOTE-->
+  <category>
+    <that>
+      tiene bigote
+    </that>
+    <pattern>
+      no
+    </pattern>
+    <template>
+      <set name="topic">gafas</set>
+      <set name="Pbigote">no</set>
+      tiene gafas
+    </template>
+  </category>
+</topic>
+
+<!-- BOT PREGUNTA: TIENE GAFAS? -->
+<topic name="gafas">
+<!-- SI TIENE GAFAS-->
+  <category>
+    <that>
+      tiene gafas
+    </that>
+    <pattern>
+      si
+    </pattern>
+    <template>
+      <set name="topic">ojos</set>
+      <set name="Pgafas">si</set>
+      tiene los ojos claros
+    </template>
+  </category>
+  
+<!-- NO TIENE GAFAS-->
+  <category>
+    <that>
+      tiene gafas
+    </that>
+    <pattern>
+      no
+    </pattern>
+    <template>
+      <set name="topic">ojos</set>
+      <set name="Pgafas">no</set>
+      tiene los ojos claros
+    </template>
+  </category>
+</topic>
+
+<!-- BOT PREGUNTA: TIENE LOS OJOS CLAROS? -->
+<topic name="ojos">
+<!-- TIENE LOS OJOS CLAROS-->
+  <category>
+    <that>
+      tiene los ojos claros
+    </that>
+    <pattern>
+      si
+    </pattern>
+    <template>
+      <set name="topic">piel</set>
+      <set name="Pojos">claros</set>
+      tiene la piel clara
+    </template>
+  </category>
+  
+<!-- TIENE LA OJOS OSCUROS-->  
+  <category>
+    <that>
+      tiene los ojos claros
+    </that>
+    <pattern>
+      no
+    </pattern>
+    <template>
+      <set name="topic">piel</set>
+      <set name="Pojos">oscuros</set>
+      tiene la piel clara
+    </template>
+  </category>
+</topic>
+
+<!-- BOT PREGUNTA: TIENE LA PIEL CLARA?-->
+<topic name="piel">
+<!-- TIENE LA PIEL CLARA -->
+  <category>
+    <that>
+      tiene la piel clara
+    </that>
+    <pattern>
+      si
+    </pattern>
+    <template>
+      <set name="topic">pelo</set>
+      <set name="Ppiel">clara</set>
+      tiene pelo
+    </template>
+  </category>
+
+<!-- TIENE LA PIEL OSCURA -->
+  <category>
+    <that>
+      tiene la piel clara
+    </that>
+    <pattern>
+      no
+    </pattern>
+    <template>
+      <set name="topic">pelo</set>
+      <set name="Ppiel">oscura</set>
+      tiene pelo
+    </template>
+  </category> 
+</topic>
+
+<!-- BOT PREGUNTA: TIENE PELO? -->
+<topic name="pelo">
+<!-- ES CALVO-->
+  <category>
+    <that>
+      tiene pelo
+    </that>
+    <pattern>
+      no
+    </pattern>
+    <template>
+      <set name="Ppelo">calvo</set>
+      FIN
+    </template>
+  </category>
+
+<!-- NO ES CALVO-->
+  <category>
+    <that>
+      tiene pelo
+    </that>
+    <pattern>
+      si
+    </pattern>
+    <template>
+      tiene el pelo marron
+    </template>
+  </category>
+  
+<!-- TIENE EL PELO MARRON-->
+  <category>
+    <that>
+     tiene el pelo marron 
+    </that>
+    <pattern>
+      si
+    </pattern>
+    <template>
+      <set name="Ppelo">marron</set>
+      FIN
+    </template>
+  </category>
+  
+<!-- NO TIENE EL PELO MARRON-->  
+  <category>
+    <that>
+     tiene el pelo marron 
+    </that>
+    <pattern>
+      no
+    </pattern>
+    <template>
+      tiene el pelo rubio
+    </template>
+  </category>
+  
+<!-- TIENE EL PELO RUBIO-->
+  <category>
+    <that>
+     tiene el pelo rubio 
+    </that>
+    <pattern>
+      si
+    </pattern>
+    <template>
+      <set name="Ppelo">rubio</set>
+      FIN
+    </template>
+  </category>
+  
+<!-- NO TIENE EL PELO RUBIO-->
+  <category>
+    <that>
+     tiene el pelo rubio
+    </that>
+    <pattern>
+      no
+    </pattern>
+    <template>
+      tiene el pelo moreno
+    </template>
+  </category>
+  
+<!-- TIENE EL PELO MORENO-->
+  <category>
+    <that>
+     tiene el pelo moreno
+    </that>
+    <pattern>
+      si
+    </pattern>
+    <template>
+      <set name="Ppelo">moreno</set>
+      FIN
+    </template>
+  </category>
+  
+<!-- NO TIENE EL PELO MORENO-->
+  <category>
+    <that>
+     tiene el pelo moreno
+    </that>
+    <pattern>
+      no
+    </pattern>
+    <template>
+      tiene el pelo blanco
+    </template>
+  </category>
+  
+<!-- TIENE EL PELO BLANCO-->
+  <category>
+    <that>
+     tiene el pelo blanco
+    </that>
+    <pattern>
+      si
+    </pattern>
+    <template>
+      <set name="Ppelo">blanco</set>
+      FIN
+    </template>
+  </category>
+  
+<!-- NO TIENE EL PELO BLANCO-->
+  <category>
+    <that>
+     tiene el pelo blanco
+    </that>
+    <pattern>
+      no
+    </pattern>
+    <template>
+      tiene el pelo pelirrojo
+    </template>
+  </category>
+  
+<!-- TIENE EL PELO PELIRROJO-->
+  <category>
+    <that>
+     tiene el pelo pelirrojo
+    </that>
+    <pattern>
+      si
+    </pattern>
+    <template>
+      <set name="Ppelo">pelirrojo</set>
+      FIN
+    </template>
+  </category>
+  
+<!-- NO TIENE EL PELO PELIRROJO-->
+  <category>
+    <that>
+     tiene el pelo pelirrojo
+    </that>
+    <pattern>
+      no
+    </pattern>
+    <template>
+      Tramposo, me dijiste que no era calvo
+    </template>
+  </category>
+
+</topic>
+
 
 <!--            FIN Nivel 2                   -->
 </aiml>
