@@ -364,28 +364,6 @@
 </category>
 
 <topic name="juego1">
-<!-- FUNCION: IF OP1 == OP2 THEN P1 ELSE P2 FI -->
-<category>
-  <pattern>
-    IF * == * THEN * ELSE *
-  </pattern>
-  <template>
-    <think>
-    <set var="OP1"><star index="1"/></set>
-    <set var="OP2"><star index="2"/></set>
-    <set var="P1"><star index="3"/></set>
-    <set var="P2"><star index="4"/></set>
-    </think>
-    <condition var="OP1">
-      <li><value><get var="OP2"/></value> 
-        <get var="P1"/>
-      </li>
-      <li>
-        <get var="P2"/>
-      </li>
-    </condition>
-  </template>
-</category>
 
 <!-- PREGUNTA: TIENE EL/LA/LOS/LAS ALGO CARACTERISTICA -->
 <!-- ALGO: PELO, OJOS, PIEL -->
@@ -477,8 +455,10 @@
       <li value="si">
         <think>
         <set name="topic">unknown</set>
+        <set name="personaje">unknown</set>
+        <srai>FIN</srai>
         </think>
-        <set>afirmaciones</set>, enhorabuena has acertado
+        Enhorabuena has acertado
       </li>
       <li value="no">
         No, sigue intentandolo
@@ -530,9 +510,9 @@
     * 
   </pattern>
   <template> 
-No me has respondido a la pregunta, para seguir jugando di continuar.
-Si quieres recomenzar el juego di reiniciar.
-Cada vez que dejas de jugar un gatito muere :'(
+    No me has respondido a la pregunta, para seguir jugando di continuar.
+    Si quieres recomenzar el juego di reiniciar.
+    Cada vez que dejas de jugar un gatito muere :'(
   </template>
 </category>
 
@@ -554,10 +534,9 @@ Cada vez que dejas de jugar un gatito muere :'(
     reiniciar
   </pattern>
   <template>
-    <think>
-      <set name="Posicion_actual">unknown</set>
-      <set name="lista_global">unknown</set>
-    </think>
+    <srai>
+      FIN
+    </srai>
     <srai>
       # juego2 #
     </srai>
@@ -622,7 +601,45 @@ Cada vez que dejas de jugar un gatito muere :'(
     </condition>
   </template>
 </category>
-  
+
+<!-- CUANDO SE INVOCA REINICIA LAS VARIABLES GLOBALES-->
+<category>
+  <pattern>
+    FIN
+  </pattern>
+  <template>
+    <think>
+    <set name="Posicion_actual">unknown</set>
+    <set name="lista_global">unknown</set>
+    <set name="candidato">unknown</set>
+    <set name="candidato_alternativo">unknown</set>
+    <set name="Ppelo">unknown</set>
+    <set name="Pojos">unknown</set>
+    <set name="Ppiel">unknown</set>
+    <set name="Pbarba">unknown</set>
+    <set name="Pbigote">unknown</set>
+    <set name="Pgafas">unknown</set>
+    <set name="Psexo">unknown</set>
+    </think>
+  </template>
+</category>
+
+<category>
+  <pattern>
+    TRAMPOSO
+  </pattern>
+  <template>
+    No hay ningún personaje con las siguientes caracteristicas:
+      Pelo: <get name="Ppelo"/>
+      Piel: <get name="Ppiel"/>
+      Ojos: <get name="Pojos"/>
+      Barba: <get name="Pbarba"/>
+      Bigote: <get name="Pbigote"/>
+      Gafas: <get name="Pgafas"/>
+      Sexo: <get name="Psexo"/>
+  </template>
+</category>
+
 <!-- BOT PREGUNTA: EL PERSONAJE ES <STAR/>?-->
 <!-- RESPUESTA: SI-->
 <category>
@@ -633,13 +650,9 @@ Cada vez que dejas de jugar un gatito muere :'(
     si
   </pattern>
   <template>
-    <think>
-    <set name="Posicion_actual">unknown</set>
-    <set name="lista_global">unknown</set>
-    <set name="candidato">unknown</set>
-    <set name="candidato_alternativo">unknown</set>
-    </think>
-    FIN
+    <srai>
+      FIN
+    </srai>
   </template>
 </category>  
 
@@ -655,7 +668,7 @@ Cada vez que dejas de jugar un gatito muere :'(
   <template>
     <condition name="candidato_alternativo">
       <li value="unknown">
-        Trampa detectada
+        <srai> TRAMPOSO </srai>
       </li>
       <li>
         EL PERSONAJE ES <get name="candidato_alternativo"/>
@@ -690,12 +703,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           tiene barba
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -726,12 +742,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           tiene gafas
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -761,12 +780,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           tiene bigote
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -795,12 +817,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           tiene bigote
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -830,12 +855,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           tiene gafas
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -864,12 +892,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           tiene gafas
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -899,12 +930,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           tiene los ojos claros
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -933,12 +967,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           tiene los ojos claros
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -968,12 +1005,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           tiene la piel clara
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -1002,12 +1042,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           tiene la piel clara
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -1037,12 +1080,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           tiene pelo
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -1071,12 +1117,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           tiene pelo
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -1106,12 +1155,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           es hombre
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -1156,12 +1208,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           es hombre
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -1206,12 +1261,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           es hombre
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -1256,12 +1314,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           es hombre
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -1306,12 +1367,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           es hombre
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
@@ -1356,12 +1420,15 @@ Cada vez que dejas de jugar un gatito muere :'(
       </think>
       <condition name="candidato">
         <li value="trampa">
-          TRAMPOSO
+          <srai> TRAMPOSO </srai>
         </li>
         <li value="unknown">
           es hombre
         </li>
         <li>
+          <think>
+          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
+          </think>
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
