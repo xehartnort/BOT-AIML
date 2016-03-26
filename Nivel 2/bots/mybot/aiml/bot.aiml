@@ -478,9 +478,9 @@
         <think>
         <set name="topic">unknown</set>
         </think>
-        Si, enhorabuena has acertado
+        <set>afirmaciones</set>, enhorabuena has acertado
       </li>
-      <li valute="no">
+      <li value="no">
         No, sigue intentandolo
       </li>
     </condition>
@@ -498,18 +498,69 @@
     # juego2 #
   </pattern>
   <template>
-    <random>
-      <li>es hombre</li>
-      <li>tiene barba</li>
-      <li>tiene bigote</li>
-      <li>tiene gafas</li>
-      <li>tiene los ojos claros</li>
-      <li>tiene la piel clara</li>
-      <li>tiene el pelo rubio</li>
-      <li>tiene el pelo moreno</li>
-      <li>tiene el pelo marron</li>
-      <li>tiene el pelo pelirrojo</li>
-    </random>
+    <condition name="Posicion_actual">
+      <li value="unknown">
+        <random>
+          <li>es hombre</li>
+          <li>tiene barba</li>
+          <li>tiene bigote</li>
+          <li>tiene gafas</li>
+          <li>tiene los ojos claros</li>
+          <li>tiene la piel clara</li>
+          <li>tiene el pelo rubio</li>
+          <li>tiene el pelo moreno</li>
+          <li>tiene el pelo marron</li>
+          <li>tiene el pelo blanco</li>
+          <li>tiene el pelo pelirrojo</li>
+        </random>
+      </li>
+      <li>
+        <get name="Posicion_actual"/>
+      </li>
+    </condition>
+  </template>
+</category>
+
+<!-- REPUESTA DE CONTROL EN CASO DE QUE EL USUARIO DEJE DE JUGAR-->
+<category>
+  <that>
+    <set>preguntas</set>
+  </that>
+  <pattern> 
+    * 
+  </pattern>
+  <template> 
+No me has respondido a la pregunta, para seguir jugando di continuar.
+Si quieres recomenzar el juego di reiniciar.
+Cada vez que dejas de jugar un gatito muere :'(
+  </template>
+</category>
+
+<!-- PARA CONTINUAR JUGANDO AL JUEGO O EMPEZARLO-->
+<category>
+  <pattern>
+    continuar
+  </pattern>
+  <template>
+    <srai>
+      # juego2 #
+    </srai>
+  </template>
+</category>
+
+<!-- PARA REINICIAR EL JUEGO -->
+<category>
+  <pattern>
+    reiniciar
+  </pattern>
+  <template>
+    <think>
+      <set name="Posicion_actual">unknown</set>
+      <set name="lista_global">unknown</set>
+    </think>
+    <srai>
+      # juego2 #
+    </srai>
   </template>
 </category>
 
@@ -538,6 +589,84 @@
   </template>
 </category>
 
+<!-- DECIDE SI EN LA INFORMACIÓN DE LA LISTA GLOBAL HAY UN PERSONAJE CANDIDATO-->
+<category>
+  <pattern>
+    DEDUCIR PERSONAJE
+  </pattern>
+  <template>
+    <set var="tamanio">
+      <srai>
+        COUNT <get name="lista_global"/>
+      </srai>
+    </set>
+    <condition var="tamanio">
+      <li value="0">
+        <set name="candidato">trampa</set>
+      </li>
+      <li value="1">
+        <set name="candidato"><get name="lista_global"/></set>
+      </li>
+      <li value="2">
+        <set name="candidato">
+          <srai>
+            TOP <get name="lista_global"/>
+          </srai>
+        </set>
+        <set name="candidato_alternativo">
+          <srai>
+            REMAIN <get name="lista_global"/>
+          </srai>
+        </set>
+      </li>
+    </condition>
+  </template>
+</category>
+  
+<!-- BOT PREGUNTA: EL PERSONAJE ES <STAR/>?-->
+<!-- RESPUESTA: SI-->
+<category>
+  <that>
+    EL PERSONAJE ES * 
+  </that>
+  <pattern>
+    si
+  </pattern>
+  <template>
+    <think>
+    <set name="Posicion_actual">unknown</set>
+    <set name="lista_global">unknown</set>
+    <set name="candidato">unknown</set>
+    <set name="candidato_alternativo">unknown</set>
+    </think>
+    FIN
+  </template>
+</category>  
+
+
+<!-- RESPUESTA: NO-->
+<category>
+  <that>
+    EL PERSONAJE ES * 
+  </that>
+  <pattern>
+    no
+  </pattern>
+  <template>
+    <condition name="candidato_alternativo">
+      <li value="unknown">
+        Trampa detectada
+      </li>
+      <li>
+        EL PERSONAJE ES <get name="candidato_alternativo"/>
+        <think>
+          <set name="candidato_alternativo">unknown</set>
+        </think>
+      </li>
+    </condition>
+  </template>
+</category>
+
 <!-- BOT PREGUNTA: ES HOMBRE?-->
 <!-- SI ES HOMBRE -->
   <category>
@@ -545,17 +674,31 @@
       es hombre
     </that>
     <pattern>
-      si
+      <set>afirmaciones</set>
     </pattern>
     <template>
       <think>
       <set name="Psexo">hombre</set>
       <set var="lista_local"><map name="r_sexo">hombre</map></set>
+      <set name="Posicion_actual">tiene barba</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-      tiene barba
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          tiene barba
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
 
@@ -565,19 +708,33 @@
       es hombre
     </that>
     <pattern>
-      no
+      <set>negaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_sexo">mujer</map></set>
+      <set name="Posicion_actual">tiene gafas</set>
       <set name="Psexo">mujer</set>
       <set name="Pbarba">no</set>
       <set name="Pbigote">no</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-      tiene gafas
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          tiene gafas
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
 
@@ -588,17 +745,31 @@
       tiene barba
     </that>
     <pattern>
-      si
+      <set>afirmaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_barba">si</map></set>
+      <set name="Posicion_actual">tiene bigote</set>
       <set name="Pbarba">si</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-      tiene bigote
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          tiene bigote
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
 
@@ -608,17 +779,31 @@
       tiene barba
     </that>
     <pattern>
-      no
+      <set>negaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_barba">no</map></set>
+      <set name="Posicion_actual">tiene bigote</set>
       <set name="Pbarba">no</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-      tiene bigote
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          tiene bigote
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
 
@@ -629,17 +814,31 @@
       tiene bigote
     </that>
     <pattern>
-      si
+      <set>afirmaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_bigote">si</map></set>
+      <set name="Posicion_actual">tiene gafas</set>
       <set name="Pbigote">si</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-      tiene gafas
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          tiene gafas
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
   
@@ -649,17 +848,31 @@
       tiene bigote
     </that>
     <pattern>
-      no
+      <set>negaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_bigote">no</map></set>
+      <set name="Posicion_actual">tiene gafas</set>
       <set name="Pbigote">no</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-      tiene gafas
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          tiene gafas
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
 
@@ -670,17 +883,31 @@
       tiene gafas
     </that>
     <pattern>
-      si
+      <set>afirmaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_gafas">si</map></set>
+      <set name="Posicion_actual">tiene los ojos claros</set>
       <set name="Pgafas">si</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-      tiene los ojos claros
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          tiene los ojos claros
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
   
@@ -690,17 +917,31 @@
       tiene gafas
     </that>
     <pattern>
-      no
+      <set>negaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_gafas">no</map></set>
-      <set name="Pgafas">no</set>
+      <set name="Posicion_actual">tiene los ojos claros</set>
+      <set name="Pgafas"><set>negaciones</set></set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-      tiene los ojos claros
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          tiene los ojos claros
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
 
@@ -711,17 +952,31 @@
       tiene los ojos claros
     </that>
     <pattern>
-      si
+      <set>afirmaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_ojos">claros</map></set>
+      <set name="Posicion_actual">tiene la piel clara</set>
       <set name="Pojos">claros</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-      tiene la piel clara
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          tiene la piel clara
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
   
@@ -731,17 +986,31 @@
       tiene los ojos claros
     </that>
     <pattern>
-      no
+      <set>negaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_ojos">oscuros</map></set>
+      <set name="Posicion_actual">tiene la piel clara</set>
       <set name="Pojos">oscuros</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-      tiene la piel clara
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          tiene la piel clara
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
 
@@ -752,17 +1021,31 @@
       tiene la piel clara
     </that>
     <pattern>
-      si
+      <set>afirmaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_piel">clara</map></set>
       <set name="Ppiel">clara</set>
+      <set name="Posicion_actual">tiene pelo</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-      tiene pelo
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          tiene pelo
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
 
@@ -772,17 +1055,31 @@
       tiene la piel clara
     </that>
     <pattern>
-      no
+      <set>negaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_piel">oscura</map></set>
       <set name="Ppiel">oscura</set>
+      <set name="Posicion_actual">tiene pelo</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-      tiene pelo
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          tiene pelo
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category> 
 
@@ -793,17 +1090,31 @@
       tiene pelo
     </that>
     <pattern>
-      no
+      <set>negaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_pelo">calvo</map></set>
+      <set name="Posicion_actual">es hombre</set>
       <set name="Ppelo">calvo</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-      es hombre
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          es hombre
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
 
@@ -813,9 +1124,12 @@
       tiene pelo
     </that>
     <pattern>
-      si
+      <set>afirmaciones</set>
     </pattern>
     <template>
+      <think>
+      <set name="Posicion_actual">tiene el pelo marron</set>
+      </think>
       tiene el pelo marron
     </template>
   </category>
@@ -826,17 +1140,31 @@
      tiene el pelo marron 
     </that>
     <pattern>
-      si
+      <set>afirmaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_pelo">marron</map></set>
+      <set name="Posicion_actual">es hombre</set>
       <set name="Ppelo">marron</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-       es hombre
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          es hombre
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
   
@@ -846,9 +1174,12 @@
      tiene el pelo marron 
     </that>
     <pattern>
-      no
+      <set>negaciones</set>
     </pattern>
     <template>
+      <think>
+      <set name="Posicion_actual">tiene el pelo rubio</set>
+      </think>
       tiene el pelo rubio
     </template>
   </category>
@@ -859,17 +1190,31 @@
      tiene el pelo rubio 
     </that>
     <pattern>
-      si
+      <set>afirmaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_pelo">rubio</map></set>
+      <set name="Posicion_actual">es hombre</set>
       <set name="Ppelo">rubio</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-       es hombre
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          es hombre
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
   
@@ -879,9 +1224,12 @@
      tiene el pelo rubio
     </that>
     <pattern>
-      no
+      <set>negaciones</set>
     </pattern>
     <template>
+      <think>
+      <set name="Posicion_actual">tiene el pelo moreno</set>
+      </think>
       tiene el pelo moreno
     </template>
   </category>
@@ -892,17 +1240,31 @@
      tiene el pelo moreno
     </that>
     <pattern>
-      si
+      <set>afirmaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_pelo">moreno</map></set>
+      <set name="Posicion_actual">es hombre</set>
       <set name="Ppelo">moreno</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-       es hombre
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          es hombre
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
   
@@ -912,9 +1274,12 @@
      tiene el pelo moreno
     </that>
     <pattern>
-      no
+      <set>negaciones</set>
     </pattern>
     <template>
+      <think>
+      <set name="Posicion_actual">tiene el pelo blanco</set>
+      </think>
       tiene el pelo blanco
     </template>
   </category>
@@ -925,17 +1290,31 @@
      tiene el pelo blanco
     </that>
     <pattern>
-      si
+      <set>afirmaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_pelo">blanco</map></set>
+      <set name="Posicion_actual">es hombre</set>
       <set name="Ppelo">blanco</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-       es hombre
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          es hombre
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
   
@@ -945,9 +1324,12 @@
      tiene el pelo blanco
     </that>
     <pattern>
-      no
+      <set>negaciones</set>
     </pattern>
-    <template>
+    <template>      
+      <think>
+      <set name="Posicion_actual">tiene el pelo pelirrojo</set>
+      </think>
       tiene el pelo pelirrojo
     </template>
   </category>
@@ -958,17 +1340,31 @@
      tiene el pelo pelirrojo
     </that>
     <pattern>
-      si
+      <set>afirmaciones</set>
     </pattern>
     <template>
       <think>
       <set var="lista_local"><map name="r_pelo">pelirrojo</map></set>
       <set name="Ppelo">pelirrojo</set>
+      <set name="Posicion_actual">es hombre</set>
       <srai>
         UPDATE_GLOBAL_LIST <get var="lista_local"/>
       </srai>
+      <srai>
+        DEDUCIR PERSONAJE
+      </srai>
       </think>
-       es hombre
+      <condition name="candidato">
+        <li value="trampa">
+          TRAMPOSO
+        </li>
+        <li value="unknown">
+          es hombre
+        </li>
+        <li>
+          EL PERSONAJE ES <get name="candidato"/>
+        </li>
+      </condition>
     </template>
   </category>
   
@@ -978,9 +1374,12 @@
      tiene el pelo pelirrojo
     </that>
     <pattern>
-      no
+      <set>negaciones</set>
     </pattern>
     <template>
+      <think>
+      <set name="Posicion_actual">es hombre</set>
+      </think>
       es hombre
     </template>
   </category>
