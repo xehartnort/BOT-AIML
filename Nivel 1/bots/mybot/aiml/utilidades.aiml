@@ -273,10 +273,10 @@
 	    </li>
 		  <li>
         <srai>
-          TOP <get name="iterator"/>
+          TOP <get var="iterator"/>
         </srai>
         <think>
-          <set name="iterator"><srai>REMAIN<get name="iterator"/></srai></set>
+          <set var="iterator"><srai>REMAIN<get var="iterator"/></srai></set>
         </think>
 		  </li>
 	  </condition>

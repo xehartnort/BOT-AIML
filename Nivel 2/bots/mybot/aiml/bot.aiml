@@ -322,6 +322,7 @@
   <template>
     <think>
     <!-- VARIABLES GLOBALES -->
+      <set name="topic">juego1</set>
       <set name="Plista"> Alejandro Alfonso Antonio Cristina Gabriela Ivan Javier Juan Laura Luis Marco Maria Paco Pepe Sofia Sonia </set>
       <set name="personaje"> 
         <srai>
@@ -362,6 +363,7 @@
   </template>
 </category>
 
+<topic name="juego1">
 <!-- FUNCION: IF OP1 == OP2 THEN P1 ELSE P2 FI -->
 <category>
   <pattern>
@@ -464,12 +466,27 @@
     EL PERSONAJE ES <set>personajes</set>
   </pattern>
   <template>
-    <srai>
-      COMPARE <star/> WITH <get name="personaje"/>
-    </srai>
+    <think>
+    <set var="resultado">
+      <srai>
+        COMPARE <star/> WITH <get name="personaje"/>
+      </srai>
+    </set>
+    </think>
+    <condition var="resultado">
+      <li value="si">
+        <think>
+        <set name="topic">unknown</set>
+        </think>
+        Si, enhorabuena has acertado
+      </li>
+      <li valute="no">
+        No, sigue intentandolo
+      </li>
+    </condition>
   </template>
 </category>
-
+</topic>
 <!--            FIN Nivel 1                   -->
 
 
@@ -481,25 +498,63 @@
     # juego2 #
   </pattern>
   <template>
-    <set name="topic">sexo</set>
-    es hombre
+    <random>
+      <li>es hombre</li>
+      <li>tiene barba</li>
+      <li>tiene bigote</li>
+      <li>tiene gafas</li>
+      <li>tiene los ojos claros</li>
+      <li>tiene la piel clara</li>
+      <li>tiene el pelo rubio</li>
+      <li>tiene el pelo moreno</li>
+      <li>tiene el pelo marron</li>
+      <li>tiene el pelo pelirrojo</li>
+    </random>
   </template>
-  
+</category>
+
+<!-- FUNCION QUE INICIALIZA Y INTERSECA LA LISTA GLOBAL DE CANDIDATOS CON LA LISTA PROPORCIONADA <STAR/>-->
+<category>
+  <pattern>
+    UPDATE_GLOBAL_LIST *
+  </pattern>
+  <template>
+    <think>
+    <set var="lista_local"><star/></set>
+    <condition name="lista_global">
+      <li value="unknown">
+        <set name="lista_global"><get var="lista_local"/></set>
+      </li>
+      <li>
+        <set var="lista2"><get name="lista_global"/></set>
+        <set name="lista_global">
+          <srai>
+            INTERSEC <get var="lista_local"/> AND <get var="lista2"/> 
+          </srai>
+        </set>
+      </li>
+    </condition>
+    </think>
+  </template>
 </category>
 
 <!-- BOT PREGUNTA: ES HOMBRE?-->
-<topic name="sexo">
 <!-- SI ES HOMBRE -->
   <category>
     <that> 
-      Es hombre
+      es hombre
     </that>
     <pattern>
-      Si
+      si
     </pattern>
     <template>
-      <set name="topic">barba</set>
+      <think>
       <set name="Psexo">hombre</set>
+      <set var="lista_local"><map name="r_sexo">hombre</map></set>
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
       tiene barba
     </template>
   </category>
@@ -507,34 +562,42 @@
 <!-- SI ES MUJER -->
   <category>
     <that> 
-      Es mujer
+      es hombre
     </that>
     <pattern>
-      No
+      no
     </pattern>
     <template>
-      <set name="topic">gafas</set>
+      <think>
+      <set var="lista_local"><map name="r_sexo">mujer</map></set>
       <set name="Psexo">mujer</set>
       <set name="Pbarba">no</set>
       <set name="Pbigote">no</set>
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
       tiene gafas
     </template>
   </category>
-</topic>
 
 <!-- BOT PREGUNTA: TIENE BARBA? -->
-<topic name="barba">
 <!-- SI TIENE BARBA-->
   <category>
     <that>
       tiene barba
     </that>
     <pattern>
-      Si
+      si
     </pattern>
     <template>
-      <set name="topic">barba</set>
+      <think>
+      <set var="lista_local"><map name="r_barba">si</map></set>
       <set name="Pbarba">si</set>
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
       tiene bigote
     </template>
   </category>
@@ -545,18 +608,21 @@
       tiene barba
     </that>
     <pattern>
-      No
+      no
     </pattern>
     <template>
-      <set name="topic">barba</set>
+      <think>
+      <set var="lista_local"><map name="r_barba">no</map></set>
       <set name="Pbarba">no</set>
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
       tiene bigote
     </template>
   </category>
-</topic>
 
 <!-- BOT PREGUNTA: TIENE BIGOTE? -->
-<topic name="bigote">
 <!-- SI TIENE BIGOTE-->
   <category>
     <that>
@@ -566,8 +632,13 @@
       si
     </pattern>
     <template>
-      <set name="topic">gafas</set>
+      <think>
+      <set var="lista_local"><map name="r_bigote">si</map></set>
       <set name="Pbigote">si</set>
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
       tiene gafas
     </template>
   </category>
@@ -581,15 +652,18 @@
       no
     </pattern>
     <template>
-      <set name="topic">gafas</set>
+      <think>
+      <set var="lista_local"><map name="r_bigote">no</map></set>
       <set name="Pbigote">no</set>
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
       tiene gafas
     </template>
   </category>
-</topic>
 
 <!-- BOT PREGUNTA: TIENE GAFAS? -->
-<topic name="gafas">
 <!-- SI TIENE GAFAS-->
   <category>
     <that>
@@ -599,8 +673,13 @@
       si
     </pattern>
     <template>
-      <set name="topic">ojos</set>
+      <think>
+      <set var="lista_local"><map name="r_gafas">si</map></set>
       <set name="Pgafas">si</set>
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
       tiene los ojos claros
     </template>
   </category>
@@ -614,15 +693,18 @@
       no
     </pattern>
     <template>
-      <set name="topic">ojos</set>
+      <think>
+      <set var="lista_local"><map name="r_gafas">no</map></set>
       <set name="Pgafas">no</set>
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
       tiene los ojos claros
     </template>
   </category>
-</topic>
 
 <!-- BOT PREGUNTA: TIENE LOS OJOS CLAROS? -->
-<topic name="ojos">
 <!-- TIENE LOS OJOS CLAROS-->
   <category>
     <that>
@@ -632,8 +714,13 @@
       si
     </pattern>
     <template>
-      <set name="topic">piel</set>
+      <think>
+      <set var="lista_local"><map name="r_ojos">claros</map></set>
       <set name="Pojos">claros</set>
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
       tiene la piel clara
     </template>
   </category>
@@ -647,15 +734,18 @@
       no
     </pattern>
     <template>
-      <set name="topic">piel</set>
+      <think>
+      <set var="lista_local"><map name="r_ojos">oscuros</map></set>
       <set name="Pojos">oscuros</set>
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
       tiene la piel clara
     </template>
   </category>
-</topic>
 
 <!-- BOT PREGUNTA: TIENE LA PIEL CLARA?-->
-<topic name="piel">
 <!-- TIENE LA PIEL CLARA -->
   <category>
     <that>
@@ -665,8 +755,13 @@
       si
     </pattern>
     <template>
-      <set name="topic">pelo</set>
+      <think>
+      <set var="lista_local"><map name="r_piel">clara</map></set>
       <set name="Ppiel">clara</set>
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
       tiene pelo
     </template>
   </category>
@@ -680,15 +775,18 @@
       no
     </pattern>
     <template>
-      <set name="topic">pelo</set>
+      <think>
+      <set var="lista_local"><map name="r_piel">oscura</map></set>
       <set name="Ppiel">oscura</set>
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
       tiene pelo
     </template>
   </category> 
-</topic>
 
 <!-- BOT PREGUNTA: TIENE PELO? -->
-<topic name="pelo">
 <!-- ES CALVO-->
   <category>
     <that>
@@ -698,8 +796,14 @@
       no
     </pattern>
     <template>
+      <think>
+      <set var="lista_local"><map name="r_pelo">calvo</map></set>
       <set name="Ppelo">calvo</set>
-      FIN
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
+      es hombre
     </template>
   </category>
 
@@ -725,8 +829,14 @@
       si
     </pattern>
     <template>
+      <think>
+      <set var="lista_local"><map name="r_pelo">marron</map></set>
       <set name="Ppelo">marron</set>
-      FIN
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
+       es hombre
     </template>
   </category>
   
@@ -752,8 +862,14 @@
       si
     </pattern>
     <template>
+      <think>
+      <set var="lista_local"><map name="r_pelo">rubio</map></set>
       <set name="Ppelo">rubio</set>
-      FIN
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
+       es hombre
     </template>
   </category>
   
@@ -779,8 +895,14 @@
       si
     </pattern>
     <template>
+      <think>
+      <set var="lista_local"><map name="r_pelo">moreno</map></set>
       <set name="Ppelo">moreno</set>
-      FIN
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
+       es hombre
     </template>
   </category>
   
@@ -806,8 +928,14 @@
       si
     </pattern>
     <template>
+      <think>
+      <set var="lista_local"><map name="r_pelo">blanco</map></set>
       <set name="Ppelo">blanco</set>
-      FIN
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
+       es hombre
     </template>
   </category>
   
@@ -833,8 +961,14 @@
       si
     </pattern>
     <template>
+      <think>
+      <set var="lista_local"><map name="r_pelo">pelirrojo</map></set>
       <set name="Ppelo">pelirrojo</set>
-      FIN
+      <srai>
+        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+      </srai>
+      </think>
+       es hombre
     </template>
   </category>
   
@@ -847,12 +981,9 @@
       no
     </pattern>
     <template>
-      Tramposo, me dijiste que no era calvo
+      es hombre
     </template>
   </category>
-
-</topic>
-
 
 <!--            FIN Nivel 2                   -->
 </aiml>
