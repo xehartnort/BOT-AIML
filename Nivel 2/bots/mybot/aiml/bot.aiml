@@ -475,7 +475,7 @@
 <!-- INICIO DEL NIVEL 2 -->
 <category>
   <pattern>
-    # juego2 #
+    # jugar # 2 #
   </pattern>
   <template>
     <condition name="Posicion_actual">
@@ -523,7 +523,7 @@
   </pattern>
   <template>
     <srai>
-      # juego2 #
+      # jugar # 2 #
     </srai>
   </template>
 </category>
@@ -538,7 +538,7 @@
       FIN
     </srai>
     <srai>
-      # juego2 #
+      # jugar # 2 #
     </srai>
   </template>
 </category>
@@ -637,6 +637,7 @@
       Bigote: <get name="Pbigote"/>
       Gafas: <get name="Pgafas"/>
       Sexo: <get name="Psexo"/>
+    <srai> FIN </srai>
   </template>
 </category>
 
@@ -644,7 +645,7 @@
 <!-- RESPUESTA: SI-->
 <category>
   <that>
-    EL PERSONAJE ES * 
+    El personaje es * 
   </that>
   <pattern>
     si
@@ -660,7 +661,7 @@
 <!-- RESPUESTA: NO-->
 <category>
   <that>
-    EL PERSONAJE ES * 
+    El personaje es * 
   </that>
   <pattern>
     no
@@ -680,22 +681,16 @@
   </template>
 </category>
 
-<!-- BOT PREGUNTA: ES HOMBRE?-->
-<!-- SI ES HOMBRE -->
-  <category>
-    <that> 
-      es hombre
-    </that>
-    <pattern>
-      <set>afirmaciones</set>
-    </pattern>
-    <template>
+
+<!-- ACTUALIZA LA LISTA GLOBAL DE PERSONAJES Y DECIDE SI SEGUIR PREGUNTANDO RASGOS O DECIR UN PERSONAJE-->
+<category>
+  <pattern>
+    PENSAR *
+  </pattern>
+  <template>
       <think>
-      <set name="Psexo">hombre</set>
-      <set var="lista_local"><map name="r_sexo">hombre</map></set>
-      <set name="Posicion_actual">tiene barba</set>
       <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
+        UPDATE_GLOBAL_LIST <star/>
       </srai>
       <srai>
         DEDUCIR PERSONAJE
@@ -715,6 +710,27 @@
           EL PERSONAJE ES <get name="candidato"/>
         </li>
       </condition>
+  </template>  
+</category>
+
+<!-- BOT PREGUNTA: ES HOMBRE?-->
+<!-- SI ES HOMBRE -->
+  <category>
+    <that> 
+      es hombre
+    </that>
+    <pattern>
+      <set>afirmaciones</set>
+    </pattern>
+    <template>
+      <think>
+      <set name="Psexo">hombre</set>
+      <set var="lista_local"><map name="r_sexo">hombre</map></set>
+      <set name="Posicion_actual">tiene barba</set>
+      </think>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
 
@@ -733,27 +749,10 @@
       <set name="Psexo">mujer</set>
       <set name="Pbarba">no</set>
       <set name="Pbigote">no</set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          tiene gafas
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
 
@@ -771,27 +770,10 @@
       <set var="lista_local"><map name="r_barba">si</map></set>
       <set name="Posicion_actual">tiene bigote</set>
       <set name="Pbarba">si</set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          tiene bigote
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
 
@@ -808,27 +790,10 @@
       <set var="lista_local"><map name="r_barba">no</map></set>
       <set name="Posicion_actual">tiene bigote</set>
       <set name="Pbarba">no</set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          tiene bigote
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
 
@@ -846,27 +811,10 @@
       <set var="lista_local"><map name="r_bigote">si</map></set>
       <set name="Posicion_actual">tiene gafas</set>
       <set name="Pbigote">si</set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          tiene gafas
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
   
@@ -883,27 +831,10 @@
       <set var="lista_local"><map name="r_bigote">no</map></set>
       <set name="Posicion_actual">tiene gafas</set>
       <set name="Pbigote">no</set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          tiene gafas
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
 
@@ -921,27 +852,10 @@
       <set var="lista_local"><map name="r_gafas">si</map></set>
       <set name="Posicion_actual">tiene los ojos claros</set>
       <set name="Pgafas">si</set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          tiene los ojos claros
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
   
@@ -958,27 +872,10 @@
       <set var="lista_local"><map name="r_gafas">no</map></set>
       <set name="Posicion_actual">tiene los ojos claros</set>
       <set name="Pgafas"><set>negaciones</set></set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          tiene los ojos claros
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
 
@@ -996,27 +893,10 @@
       <set var="lista_local"><map name="r_ojos">claros</map></set>
       <set name="Posicion_actual">tiene la piel clara</set>
       <set name="Pojos">claros</set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          tiene la piel clara
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
   
@@ -1033,27 +913,10 @@
       <set var="lista_local"><map name="r_ojos">oscuros</map></set>
       <set name="Posicion_actual">tiene la piel clara</set>
       <set name="Pojos">oscuros</set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          tiene la piel clara
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
 
@@ -1071,27 +934,10 @@
       <set var="lista_local"><map name="r_piel">clara</map></set>
       <set name="Ppiel">clara</set>
       <set name="Posicion_actual">tiene pelo</set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          tiene pelo
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
 
@@ -1108,27 +954,10 @@
       <set var="lista_local"><map name="r_piel">oscura</map></set>
       <set name="Ppiel">oscura</set>
       <set name="Posicion_actual">tiene pelo</set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          tiene pelo
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category> 
 
@@ -1146,27 +975,10 @@
       <set var="lista_local"><map name="r_pelo">calvo</map></set>
       <set name="Posicion_actual">es hombre</set>
       <set name="Ppelo">calvo</set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          es hombre
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
 
@@ -1199,27 +1011,10 @@
       <set var="lista_local"><map name="r_pelo">marron</map></set>
       <set name="Posicion_actual">es hombre</set>
       <set name="Ppelo">marron</set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          es hombre
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
   
@@ -1252,27 +1047,10 @@
       <set var="lista_local"><map name="r_pelo">rubio</map></set>
       <set name="Posicion_actual">es hombre</set>
       <set name="Ppelo">rubio</set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          es hombre
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
   
@@ -1305,27 +1083,10 @@
       <set var="lista_local"><map name="r_pelo">moreno</map></set>
       <set name="Posicion_actual">es hombre</set>
       <set name="Ppelo">moreno</set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          es hombre
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
   
@@ -1358,27 +1119,10 @@
       <set var="lista_local"><map name="r_pelo">blanco</map></set>
       <set name="Posicion_actual">es hombre</set>
       <set name="Ppelo">blanco</set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          es hombre
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
   
@@ -1411,27 +1155,10 @@
       <set var="lista_local"><map name="r_pelo">pelirrojo</map></set>
       <set name="Ppelo">pelirrojo</set>
       <set name="Posicion_actual">es hombre</set>
-      <srai>
-        UPDATE_GLOBAL_LIST <get var="lista_local"/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
       </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          es hombre
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
+      <srai>
+        PENSAR <get var="lista_local"/>
+      </srai>
     </template>
   </category>
   
