@@ -321,17 +321,17 @@
     <think>
     <!-- VARIABLES GLOBALES -->
       <set name="topic">juego1</set>
-      <set name="Plista"> Alejandro Alfonso Antonio Cristina Gabriela Ivan Javier Juan Laura Luis Marco Maria Paco Pepe Sofia Sonia </set>
+      <set name="Lista_personajes"> Alejandro Alfonso Antonio Cristina Gabriela Ivan Javier Juan Laura Luis Marco Maria Paco Pepe Sofia Sonia </set>
       <set name="personaje"> 
         <srai>
           SELECTITEM 
             <srai> 
               RANDOM
               <srai>
-                COUNT <get name="Plista"/>
+                COUNT <get name="Lista_personajes"/>
               </srai>
             </srai>
-          IN <get name="Plista"/>
+          IN <get name="Lista_personajes"/>
         </srai>
       </set> 
     <!-- ATRIBUTOS DEL PERSONAJE ESCOGIDO-->
@@ -477,7 +477,7 @@
   </pattern>
   <template>
     <think>
-    <set name="Plista">
+    <set name="Lista_personajes">
       Alejandro Alfonso Antonio Cristina Gabriela Ivan Javier 
       Juan Laura Luis Marco Maria Paco Pepe Sofia Sonia </set>
     </think>
@@ -489,13 +489,16 @@
             <li>sexo</li> <li>barba</li> <li>bigote</li>
             <li>gafas</li> <li>ojos</li> <li>piel</li>
             <li>pelo</li> <li>pelo1</li> <li>pelo2</li>
-            <li>pelo3</li> <li>pelo4</li> <li>pelo4</li>
-          </random></set>
-          <srai> UPDATE_GLOBAL_LIST <get name="Plista"/> </srai>
-          </think>
-          <srai> NEXT_QUESTION </srai></li>
+            <li>pelo3</li> <li>pelo4</li> <li>pelo5</li>
+          </random>
+        </set>
+        </think>
+        <srai> UPDATE_GLOBAL_LIST <get name="Lista_personajes"/> </srai>
+        <srai> NEXT_QUESTION </srai>    
+      </li>
       <li>
-        <get name="Pregunta_actual"/></li>
+        <get name="Pregunta_actual"/>
+      </li>
     </condition>
   </template>
 </category>
@@ -548,14 +551,16 @@ CON LA LISTA PROPORCIONADA <STAR/>-->
     <set var="lista_local"><star/></set>
     <condition name="Lista_global">
       <li value="unknown">
-        <set name="Lista_global"><get var="lista_local"/></set></li>
+        <set name="Lista_global"><get var="lista_local"/></set>
+      </li>
       <li>
         <set var="lista_copia"><get name="Lista_global"/></set>
         <set name="Lista_global">
           <srai>
             INTERSEC <get var="lista_local"/> AND <get var="lista_copia"/> 
           </srai>
-        </set></li>
+        </set>
+      </li>
     </condition></think>
   </template>
 </category>
@@ -564,20 +569,27 @@ CON LA LISTA PROPORCIONADA <STAR/>-->
 CANDIDATO-->
 <category>
   <pattern>
-    DEDUCIR_PERSONAJE </pattern>
+    DEDUCIR_PERSONAJE
+  </pattern>
   <template>
     <set var="tamanio">
-      <srai> COUNT <get name="Lista_global"/></srai></set>
+      <srai> COUNT <get name="Lista_global"/></srai>
+    </set>
     <condition var="tamanio">
       <li value="0">
-        <set name="Candidato">trampa</set></li>
+        <set name="Candidato">trampa</set>
+      </li>
       <li value="1">
-        <set name="Candidato"><get name="Lista_global"/></set></li>
+        <set name="Candidato"><get name="Lista_global"/></set>
+      </li>
       <li value="2">
         <set name="Candidato">
-          <srai> TOP <get name="Lista_global"/> </srai></set>
+          <srai> TOP <get name="Lista_global"/> </srai>
+        </set>
         <set name="Candidato_alternativo">
-          <srai> REMAIN <get name="Lista_global"/> </srai></set></li>
+          <srai> REMAIN <get name="Lista_global"/> </srai>
+        </set>
+      </li>
     </condition>
   </template>
 </category>
@@ -585,7 +597,8 @@ CANDIDATO-->
 <!-- ACTUALIZA LA LISTA GLOBAL DE PERSONAJES Y DECIDE SI SEGUIR PREGUNTANDO RASGOS O DECIR UN PERSONAJE-->
 <category>
   <pattern>
-    PENSAR * </pattern>
+    PENSAR * 
+  </pattern>
   <template>
       <think>
       <srai> UPDATE_GLOBAL_LIST <star/> </srai>
@@ -606,95 +619,128 @@ CANDIDATO-->
 </category>
 
 <!-- FUNCION QUE OBTIENE LA SIGUIENTE PREGUNTA QUE DESCARTE A ALGÚN PERSONAJE-->
+<!-- Genera error too much recursion, repasar-->
+<!-- Caso de especial problemática cuando el personaje es rubio-->
 <category>
   <pattern>
-    NEXT_QUESTION </pattern>
+    NEXT_QUESTION 
+  </pattern>
   <template>
     <think>
     <set name="Atributo_actual">
-      <map name="s_atributo"><get name="Atributo_actual"/></map></set>
+      <map name="s_atributo"><get name="Atributo_actual"/></map>
+    </set>
     <condition name="Atributo_actual">
-      <li value="sexo">
-        <set name="lista1"><map name="r_sexo">hombre</map></set>
-        <set name="lista2"><map name="r_sexo">mujer</map></set></li> 
-      <li value="barba">
-        <set name="lista1"><map name="r_barba">si</map></set>
-        <set name="lista2"><map name="r_barba">no</map></set></li>
-      <li value="bigote">
-        <set name="lista1"><map name="r_bigote">si</map></set>
-        <set name="lista2"><map name="r_bigote">no</map></set></li>
-      <li value="gafas">
-        <set name="lista1"><map name="r_gafas">si</map></set>
-        <set name="lista2"><map name="r_gafas">no</map></set></li>
       <li value="ojos">
-        <set name="lista1"><map name="r_ojos">claros</map></set>
-        <set name="lista2"><map name="r_ojos">oscuros</map></set></li>
+        <set name="Lista1"><map name="r_ojos">claros</map></set>
+        <set name="Atributo1">claros</set>
+        <set name="Lista2"><map name="r_ojos">oscuros</map></set>
+        <set name="Atributo2">oscuros</set>
+      </li>
       <li value="piel">
-        <set name="lista1"><map name="r_piel">clara</map></set>
-        <set name="lista2"><map name="r_piel">oscura</map></set></li>
+        <set name="Lista1"><map name="r_piel">clara</map></set>
+        <set name="Atributo1">clara</set>
+        <set name="Lista2"><map name="r_piel">oscura</map></set>
+        <set name="Atributo2">oscura</set>
+      </li>
       <li value="pelo">
-        <set name="lista1"><map name="r_pelo">calvo</map></set>
-        <set name="lista2">
+        <set name="Lista1"><map name="r_pelo">calvo</map></set>
+        <set name="Atributo1">calvo</set>
+        <set name="Lista2">
           <map name="r_pelo">rubio</map>
           <map name="r_pelo">moreno</map>
           <map name="r_pelo">marron</map>
           <map name="r_pelo">blanco</map>
           <map name="r_pelo">pelirrojo</map>
-        </set></li>
+        </set>
+        <set name="Atributo2">no calvo</set>
+      </li>
       <li value="pelo1">
-      <!-- EL PELO ESTÁ MAL IMPLEMENTADO-->
-        <set name="lista1"><map name="r_pelo">rubio</map></set>
-        <set name="lista2">
+        <set name="Lista1"><map name="r_pelo">rubio</map></set>
+        <set name="Atributo1">rubio</set>
+        <set name="Lista2">
           <map name="r_pelo">calvo</map>
           <map name="r_pelo">moreno</map>
           <map name="r_pelo">marron</map>
           <map name="r_pelo">blanco</map>
           <map name="r_pelo">pelirrojo</map>
-        </set></li>
+        </set>
+        <set name="Atributo2">no rubio</set>
+      </li>
       <li value="pelo2">
-        <set name="lista1"><map name="r_pelo">moreno</map></set>
-        <set name="lista2">
+        <set name="Lista1"><map name="r_pelo">moreno</map></set>
+        <set name="Atributo1">moreno</set>
+        <set name="Lista2">
           <map name="r_pelo">calvo</map>
           <map name="r_pelo">rubio</map>
           <map name="r_pelo">marron</map>
           <map name="r_pelo">blanco</map>
           <map name="r_pelo">pelirrojo</map>
-        </set></li>
+        </set>
+        <set name="Atributo2">no moreno</set>
+      </li>
       <li value="pelo3">
-        <set name="lista1"><map name="r_pelo">marron</map></set>
-        <set name="lista2">
+        <set name="Lista1"><map name="r_pelo">marron</map></set>
+        <set name="Atributo1">marron</set>
+        <set name="Lista2">
           <map name="r_pelo">calvo</map>
           <map name="r_pelo">rubio</map>
           <map name="r_pelo">moreno</map>
           <map name="r_pelo">blanco</map>
           <map name="r_pelo">pelirrojo</map>
-        </set></li>
+        </set>
+        <set name="Atributo2">no marron</set>
+      </li>
       <li value="pelo4">
-        <set name="lista1"><map name="r_pelo">blanco</map></set>
-        <set name="lista2">
+        <set name="Lista1"><map name="r_pelo">blanco</map></set>
+        <set name="Atributo1">blanco</set>
+        <set name="Lista2">
           <map name="r_pelo">calvo</map>
           <map name="r_pelo">rubio</map>
           <map name="r_pelo">marron</map>
           <map name="r_pelo">moreno</map>
           <map name="r_pelo">pelirrojo</map>
-        </set></li>
+        </set>
+        <set name="Atributo2">no blanco</set>
+      </li>
       <li value="pelo5">
-        <set name="lista1"><map name="r_pelo">pelirrojo</map></set>
-        <set name="lista2">
+        <set name="Lista1"><map name="r_pelo">pelirrojo</map></set>
+        <set name="Atributo1">pelirrojo</set>
+        <set name="Lista2">
           <map name="r_pelo">calvo</map>
           <map name="r_pelo">rubio</map>
           <map name="r_pelo">marron</map>
           <map name="r_pelo">moreno</map>
           <map name="r_pelo">blanco</map>
-        </set></li>
+        </set>
+        <set name="Atributo2">no pelirrojo</set>
+      </li>
+      <li><!--SEXO, BIGOTE Y GAFAS SON PREGUNTAS BINARIAS-->
+        <set name="Lista1">
+          <map><name>r_<get name="Atributo_actual"/></name>si</map></set>
+        <set name="Atributo1">si</set>
+        <set name="Lista2">
+          <map><name>r_<get name="Atributo_actual"/></name>no</map></set>
+        <set name="Atributo2">no</set>
+      </li>
     </condition>
     <!-- Si la intersección resultante es vacía entonces vale -->
     <set var="respuesta1">
-      <srai> COMPARE <srai>COUNT <srai>INTERSEC <get name="Lista_global"/> AND <get name="lista1"/> </srai> </srai>
-          WITH 0</srai></set>
+      <srai> COMPARE 
+        <srai>COUNT 
+          <srai>INTERSEC <get name="Lista_global"/> AND <get name="Lista1"/> 
+        </srai>
+      </srai> WITH 0
+    </srai>
+    </set>
     <set var="respuesta2">
-      <srai> COMPARE <srai>COUNT <srai>INTERSEC <get name="Lista_global"/> AND <get name="lista2"/> </srai> </srai>
-          WITH 0</srai></set>
+      <srai> COMPARE 
+        <srai>COUNT 
+          <srai>INTERSEC <get name="Lista_global"/> AND <get name="Lista2"/> 
+        </srai>
+      </srai> WITH 0
+    </srai>
+    </set>
     <condition var="respuesta1">
       <li value="SI">
         <srai> NEXT_QUESTION </srai></li>
@@ -702,7 +748,8 @@ CANDIDATO-->
     <condition var="respuesta2">
       <li value="SI"> 
         <srai> NEXT_QUESTION </srai></li>
-    </condition></think>
+    </condition>
+    </think>
     <map name="pregunta_asociada"><get name="Atributo_actual"/></map>
   </template>
 </category>
@@ -734,11 +781,26 @@ CANDIDATO-->
     <set>afirmaciones</set>
   </pattern>
   <template>
-    <srai> PENSAR <get name="lista1"/> </srai>
+    <think>
+    <condition name="Atributo_actual">
+      <li value="pelo1"><set name="Ppelo">rubio</set></li>
+      <li value="pelo2"><set name="Ppelo">moreno</set></li>
+      <li value="pelo3"><set name="Ppelo">marron</set></li>
+      <li value="pelo4"><set name="Ppelo">blanco</set></li>
+      <li value="pelo5"><set name="Ppelo">pelirrojo</set></li>
+      <li>
+        <set><name>P<get name="Atributo_actual"/></name>
+          <get name="Atributo1"/>
+        </set>
+      </li>
+    </condition>
+    </think>
+    <srai> PENSAR <get name="Lista1"/> </srai>
     <think>
     <set name="Pregunta_actual">
       <map name="pregunta_asociada">
         <get name="Atributo_actual"/></map></set>
+
     </think>
   </template>
 </category>
@@ -752,35 +814,26 @@ CANDIDATO-->
     <set>negaciones</set>
   </pattern>
   <template>
-    <srai> PENSAR <get name="lista2"/> </srai>
+    <srai> PENSAR <get name="Lista2"/> </srai>
     <think>
     <set name="Pregunta_actual">
       <map name="pregunta_asociada">
         <get name="Atributo_actual"/></map></set>
+    <condition name="Atributo_actual">
+      <li value="pelo1"><set name="Ppelo">no rubio</set></li>
+      <li value="pelo2"><set name="Ppelo">no moreno</set></li>
+      <li value="pelo3"><set name="Ppelo">no marron</set></li>
+      <li value="pelo4"><set name="Ppelo">no blanco</set></li>
+      <li value="pelo5"><set name="Ppelo">no pelirrojo</set></li>
+      <li>
+        <set><name>P<get name="Atributo_actual"/></name>
+          <get name="Atributo2"/>
+        </set>
+      </li>
+    </condition>
     </think>
   </template>
 </category>
-
-<!-- BOT PREGUNTA: ES HOMBRE?-->
-<!-- SI ES HOMBRE 
-  <category>
-    <that> 
-      es hombre
-    </that>
-    <pattern>
-      <set>afirmaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set name="Psexo">hombre</set>
-      <set var="lista_local"><map name="r_sexo">hombre</map></set>
-      <set name="Pregunta_actual">tiene barba</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category> -->
 
 <!-- CUANDO SE INVOCA REINICIA LAS VARIABLES GLOBALES-->
 <category>
