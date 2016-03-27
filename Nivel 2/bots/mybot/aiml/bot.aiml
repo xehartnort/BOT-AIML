@@ -642,6 +642,7 @@ CANDIDATO-->
           <map name="r_pelo">pelirrojo</map>
         </set></li>
       <li value="pelo1">
+      <!-- EL PELO ESTÁ MAL IMPLEMENTADO-->
         <set name="lista1"><map name="r_pelo">rubio</map></set>
         <set name="lista2">
           <map name="r_pelo">calvo</map>
@@ -687,6 +688,7 @@ CANDIDATO-->
           <map name="r_pelo">blanco</map>
         </set></li>
     </condition>
+    <!-- Si la intersección resultante es vacía tampoco vale -->
     <set var="respuesta1">
       <srai> COMPARE 
         <srai>INTERSEC <get name="Lista_global"/> AND <get name="lista1"/> </srai> 
