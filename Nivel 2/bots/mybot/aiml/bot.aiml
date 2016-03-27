@@ -688,15 +688,13 @@ CANDIDATO-->
           <map name="r_pelo">blanco</map>
         </set></li>
     </condition>
-    <!-- Si la intersección resultante es vacía tampoco vale -->
+    <!-- Si la intersección resultante es vacía entonces vale -->
     <set var="respuesta1">
-      <srai> COMPARE 
-        <srai>INTERSEC <get name="Lista_global"/> AND <get name="lista1"/> </srai> 
-          WITH <get name="Lista_global"/></srai></set>
+      <srai> COMPARE <srai>COUNT <srai>INTERSEC <get name="Lista_global"/> AND <get name="lista1"/> </srai> </srai>
+          WITH 0</srai></set>
     <set var="respuesta2">
-      <srai> COMPARE 
-        <srai>INTERSEC <get name="Lista_global"/> AND <get name="lista2"/> </srai> 
-          WITH <get name="Lista_global"/></srai></set>
+      <srai> COMPARE <srai>COUNT <srai>INTERSEC <get name="Lista_global"/> AND <get name="lista2"/> </srai> </srai>
+          WITH 0</srai></set>
     <condition var="respuesta1">
       <li value="SI">
         <srai> NEXT_QUESTION </srai></li>
