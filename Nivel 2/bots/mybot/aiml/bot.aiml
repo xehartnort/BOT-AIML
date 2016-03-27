@@ -309,9 +309,7 @@
 <!--            Nivel 1                          -->
 
 <!-- LISTA DE PERSONAJES -->
-<set name="Plista">
-  Alejandro Alfonso Antonio Cristina Gabriela Ivan Javier Juan Laura Luis Marco Maria Paco Pepe Sofia Sonia
-</set>
+
 
 <!-- PREGUNTA: ALGO JUGAR ALGO -->
 <!-- SELECCION DE PERSONAJE -->
@@ -478,30 +476,31 @@
     # jugar # 2 #
   </pattern>
   <template>
-    <condition name="Posicion_actual">
+    <think>
+    <set name="Plista">
+      Alejandro Alfonso Antonio Cristina Gabriela Ivan Javier 
+      Juan Laura Luis Marco Maria Paco Pepe Sofia Sonia </set>
+    </think>
+    <condition name="Atributo_actual">
       <li value="unknown">
-        <random>
-          <li>es hombre</li>
-          <li>tiene barba</li>
-          <li>tiene bigote</li>
-          <li>tiene gafas</li>
-          <li>tiene los ojos claros</li>
-          <li>tiene la piel clara</li>
-          <li>tiene el pelo rubio</li>
-          <li>tiene el pelo moreno</li>
-          <li>tiene el pelo marron</li>
-          <li>tiene el pelo blanco</li>
-          <li>tiene el pelo pelirrojo</li>
-        </random>
-      </li>
+        <think>
+        <set name="Atributo_actual">
+          <random>
+            <li>sexo</li> <li>barba</li> <li>bigote</li>
+            <li>gafas</li> <li>ojos</li> <li>piel</li>
+            <li>pelo</li> <li>pelo1</li> <li>pelo2</li>
+            <li>pelo3</li> <li>pelo4</li> <li>pelo4</li>
+          </random></set>
+          <srai> UPDATE_GLOBAL_LIST <get name="Plista"/> </srai>
+          </think>
+          <srai> NEXT_QUESTION </srai></li>
       <li>
-        <get name="Posicion_actual"/>
-      </li>
+        <get name="Pregunta_actual"/></li>
     </condition>
   </template>
 </category>
 
-<!-- REPUESTA DE CONTROL EN CASO DE QUE EL USUARIO DEJE DE JUGAR-->
+<!-- CONTROL EN CASO DE QUE EL USUARIO DEJE DE JUGAR-->
 <category>
   <that>
     <set>preguntas</set>
@@ -510,8 +509,10 @@
     * 
   </pattern>
   <template> 
-    No me has respondido a la pregunta, para seguir jugando di continuar.
-    Si quieres recomenzar el juego di reiniciar.
+    No me has respondido a la pregunta, 
+      Si quieres seguir jugando di: CONTINUAR
+      Si quieres recomenzar el juego di: REINICIAR
+      Si quieres dejar de jugar definitivamente di: FIN
     Cada vez que dejas de jugar un gatito muere :'(
   </template>
 </category>
@@ -522,9 +523,7 @@
     continuar
   </pattern>
   <template>
-    <srai>
-      # jugar # 2 #
-    </srai>
+    <srai> # jugar # 2 # </srai>
   </template>
 </category>
 
@@ -534,93 +533,177 @@
     reiniciar
   </pattern>
   <template>
-    <srai>
-      FIN
-    </srai>
-    <srai>
-      # jugar # 2 #
-    </srai>
+    <srai> FIN </srai>
+    <srai> # jugar # 2 # </srai>
   </template>
 </category>
 
-<!-- FUNCION QUE INICIALIZA Y INTERSECA LA LISTA GLOBAL DE CANDIDATOS CON LA LISTA PROPORCIONADA <STAR/>-->
+<!-- FUNCION QUE INICIALIZA Y INTERSECA LA LISTA GLOBAL DE CANDIDATOS 
+CON LA LISTA PROPORCIONADA <STAR/>-->
 <category>
   <pattern>
-    UPDATE_GLOBAL_LIST *
-  </pattern>
+    UPDATE_GLOBAL_LIST * </pattern>
   <template>
     <think>
     <set var="lista_local"><star/></set>
-    <condition name="lista_global">
+    <condition name="Lista_global">
       <li value="unknown">
-        <set name="lista_global"><get var="lista_local"/></set>
-      </li>
+        <set name="Lista_global"><get var="lista_local"/></set></li>
       <li>
-        <set var="lista2"><get name="lista_global"/></set>
-        <set name="lista_global">
+        <set var="lista_copia"><get name="Lista_global"/></set>
+        <set name="Lista_global">
           <srai>
-            INTERSEC <get var="lista_local"/> AND <get var="lista2"/> 
+            INTERSEC <get var="lista_local"/> AND <get var="lista_copia"/> 
           </srai>
-        </set>
-      </li>
-    </condition>
-    </think>
+        </set></li>
+    </condition></think>
   </template>
 </category>
 
-<!-- DECIDE SI EN LA INFORMACIÓN DE LA LISTA GLOBAL HAY UN PERSONAJE CANDIDATO-->
+<!-- DECIDE SI EN LA INFORMACIÓN DE LA LISTA GLOBAL HAY UN PERSONAJE 
+CANDIDATO-->
 <category>
   <pattern>
-    DEDUCIR PERSONAJE
-  </pattern>
+    DEDUCIR_PERSONAJE </pattern>
   <template>
     <set var="tamanio">
-      <srai>
-        COUNT <get name="lista_global"/>
-      </srai>
-    </set>
+      <srai> COUNT <get name="Lista_global"/></srai></set>
     <condition var="tamanio">
       <li value="0">
-        <set name="candidato">trampa</set>
-      </li>
+        <set name="Candidato">trampa</set></li>
       <li value="1">
-        <set name="candidato"><get name="lista_global"/></set>
-      </li>
+        <set name="Candidato"><get name="Lista_global"/></set></li>
       <li value="2">
-        <set name="candidato">
-          <srai>
-            TOP <get name="lista_global"/>
-          </srai>
-        </set>
-        <set name="candidato_alternativo">
-          <srai>
-            REMAIN <get name="lista_global"/>
-          </srai>
-        </set>
-      </li>
+        <set name="Candidato">
+          <srai> TOP <get name="Lista_global"/> </srai></set>
+        <set name="Candidato_alternativo">
+          <srai> REMAIN <get name="Lista_global"/> </srai></set></li>
     </condition>
   </template>
 </category>
 
-<!-- CUANDO SE INVOCA REINICIA LAS VARIABLES GLOBALES-->
+<!-- ACTUALIZA LA LISTA GLOBAL DE PERSONAJES Y DECIDE SI SEGUIR PREGUNTANDO RASGOS O DECIR UN PERSONAJE-->
 <category>
   <pattern>
-    FIN
-  </pattern>
+    PENSAR * </pattern>
+  <template>
+      <think>
+      <srai> UPDATE_GLOBAL_LIST <star/> </srai>
+      <srai> DEDUCIR_PERSONAJE </srai>
+      </think>
+      <condition name="Candidato">
+        <li value="trampa">
+          <srai> TRAMPOSO </srai></li>
+        <li value="unknown">
+          <srai> NEXT_QUESTION </srai></li>
+        <li>
+          <think>
+          <set name="Pregunta_actual">EL PERSONAJE ES <get name="Candidato"/></set>
+          </think>
+          EL PERSONAJE ES <get name="Candidato"/></li>
+      </condition>
+  </template>  
+</category>
+
+<!-- FUNCION QUE OBTIENE LA SIGUIENTE PREGUNTA QUE DESCARTE A ALGÚN PERSONAJE-->
+<category>
+  <pattern>
+    NEXT_QUESTION </pattern>
   <template>
     <think>
-    <set name="Posicion_actual">unknown</set>
-    <set name="lista_global">unknown</set>
-    <set name="candidato">unknown</set>
-    <set name="candidato_alternativo">unknown</set>
-    <set name="Ppelo">unknown</set>
-    <set name="Pojos">unknown</set>
-    <set name="Ppiel">unknown</set>
-    <set name="Pbarba">unknown</set>
-    <set name="Pbigote">unknown</set>
-    <set name="Pgafas">unknown</set>
-    <set name="Psexo">unknown</set>
-    </think>
+    <set name="Atributo_actual">
+      <map name="s_atributo"><get name="Atributo_actual"/></map></set>
+    <condition name="Atributo_actual">
+      <li value="sexo">
+        <set name="lista1"><map name="r_sexo">hombre</map></set>
+        <set name="lista2"><map name="r_sexo">mujer</map></set></li> 
+      <li value="barba">
+        <set name="lista1"><map name="r_barba">si</map></set>
+        <set name="lista2"><map name="r_barba">no</map></set></li>
+      <li value="bigote">
+        <set name="lista1"><map name="r_bigote">si</map></set>
+        <set name="lista2"><map name="r_bigote">no</map></set></li>
+      <li value="gafas">
+        <set name="lista1"><map name="r_gafas">si</map></set>
+        <set name="lista2"><map name="r_gafas">no</map></set></li>
+      <li value="ojos">
+        <set name="lista1"><map name="r_ojos">claros</map></set>
+        <set name="lista2"><map name="r_ojos">oscuros</map></set></li>
+      <li value="piel">
+        <set name="lista1"><map name="r_piel">clara</map></set>
+        <set name="lista2"><map name="r_piel">oscura</map></set></li>
+      <li value="pelo">
+        <set name="lista1"><map name="r_pelo">calvo</map></set>
+        <set name="lista2">
+          <map name="r_pelo">rubio</map>
+          <map name="r_pelo">moreno</map>
+          <map name="r_pelo">marron</map>
+          <map name="r_pelo">blanco</map>
+          <map name="r_pelo">pelirrojo</map>
+        </set></li>
+      <li value="pelo1">
+        <set name="lista1"><map name="r_pelo">rubio</map></set>
+        <set name="lista2">
+          <map name="r_pelo">calvo</map>
+          <map name="r_pelo">moreno</map>
+          <map name="r_pelo">marron</map>
+          <map name="r_pelo">blanco</map>
+          <map name="r_pelo">pelirrojo</map>
+        </set></li>
+      <li value="pelo2">
+        <set name="lista1"><map name="r_pelo">moreno</map></set>
+        <set name="lista2">
+          <map name="r_pelo">calvo</map>
+          <map name="r_pelo">rubio</map>
+          <map name="r_pelo">marron</map>
+          <map name="r_pelo">blanco</map>
+          <map name="r_pelo">pelirrojo</map>
+        </set></li>
+      <li value="pelo3">
+        <set name="lista1"><map name="r_pelo">marron</map></set>
+        <set name="lista2">
+          <map name="r_pelo">calvo</map>
+          <map name="r_pelo">rubio</map>
+          <map name="r_pelo">moreno</map>
+          <map name="r_pelo">blanco</map>
+          <map name="r_pelo">pelirrojo</map>
+        </set></li>
+      <li value="pelo4">
+        <set name="lista1"><map name="r_pelo">blanco</map></set>
+        <set name="lista2">
+          <map name="r_pelo">calvo</map>
+          <map name="r_pelo">rubio</map>
+          <map name="r_pelo">marron</map>
+          <map name="r_pelo">moreno</map>
+          <map name="r_pelo">pelirrojo</map>
+        </set></li>
+      <li value="pelo5">
+        <set name="lista1"><map name="r_pelo">pelirrojo</map></set>
+        <set name="lista2">
+          <map name="r_pelo">calvo</map>
+          <map name="r_pelo">rubio</map>
+          <map name="r_pelo">marron</map>
+          <map name="r_pelo">moreno</map>
+          <map name="r_pelo">blanco</map>
+        </set></li>
+    </condition>
+    <set var="respuesta1">
+      <srai> COMPARE 
+        <srai>INTERSEC <get name="Lista_global"/> AND <get name="lista1"/> </srai> 
+          WITH <get name="Lista_global"/></srai></set>
+    <set var="respuesta2">
+      <srai> COMPARE 
+        <srai>INTERSEC <get name="Lista_global"/> AND <get name="lista2"/> </srai> 
+          WITH <get name="Lista_global"/></srai></set>
+    <condition var="respuesta1">
+      <li value="SI">
+        <srai> NEXT_QUESTION </srai></li>
+    </condition>
+    <condition var="respuesta2">
+      <li value="SI"> 
+        <srai> NEXT_QUESTION </srai></li>
+    </condition></think>
+    <map name="pregunta_asociada"><get name="Atributo_actual"/></map>
   </template>
 </category>
 
@@ -641,80 +724,45 @@
   </template>
 </category>
 
-<!-- BOT PREGUNTA: EL PERSONAJE ES <STAR/>?-->
-<!-- RESPUESTA: SI-->
+<!-- BOT PREGUNTA -->
+<!-- RESPUESTA AFIRMATIVA A LA ÚLTIMA PREGUNTA-->
 <category>
   <that>
-    El personaje es * 
+    <set>preguntas</set>
   </that>
   <pattern>
-    si
+    <set>afirmaciones</set>
   </pattern>
   <template>
-    <srai>
-      FIN
-    </srai>
-  </template>
-</category>  
-
-
-<!-- RESPUESTA: NO-->
-<category>
-  <that>
-    El personaje es * 
-  </that>
-  <pattern>
-    no
-  </pattern>
-  <template>
-    <condition name="candidato_alternativo">
-      <li value="unknown">
-        <srai> TRAMPOSO </srai>
-      </li>
-      <li>
-        EL PERSONAJE ES <get name="candidato_alternativo"/>
-        <think>
-          <set name="candidato_alternativo">unknown</set>
-        </think>
-      </li>
-    </condition>
+    <srai> PENSAR <get name="lista1"/> </srai>
+    <think>
+    <set name="Pregunta_actual">
+      <map name="pregunta_asociada">
+        <get name="Atributo_actual"/></map></set>
+    </think>
   </template>
 </category>
 
-
-<!-- ACTUALIZA LA LISTA GLOBAL DE PERSONAJES Y DECIDE SI SEGUIR PREGUNTANDO RASGOS O DECIR UN PERSONAJE-->
+<!-- RESPUESTA NEGATIVA A LA ÚLTIMA PREGUNTA-->
 <category>
+  <that>
+    <set>preguntas</set>
+  </that>
   <pattern>
-    PENSAR *
+    <set>negaciones</set>
   </pattern>
   <template>
-      <think>
-      <srai>
-        UPDATE_GLOBAL_LIST <star/>
-      </srai>
-      <srai>
-        DEDUCIR PERSONAJE
-      </srai>
-      </think>
-      <condition name="candidato">
-        <li value="trampa">
-          <srai> TRAMPOSO </srai>
-        </li>
-        <li value="unknown">
-          tiene barba
-        </li>
-        <li>
-          <think>
-          <set name="Posicion_actual">EL PERSONAJE ES <get name="candidato"/></set>
-          </think>
-          EL PERSONAJE ES <get name="candidato"/>
-        </li>
-      </condition>
-  </template>  
+    <srai> PENSAR <get name="lista2"/> </srai>
+    <think>
+    <set name="Pregunta_actual">
+      <map name="pregunta_asociada">
+        <get name="Atributo_actual"/></map></set>
+    </think>
+  </template>
 </category>
 
 <!-- BOT PREGUNTA: ES HOMBRE?-->
-<!-- SI ES HOMBRE -->
+<!-- SI ES HOMBRE 
   <category>
     <that> 
       es hombre
@@ -726,457 +774,72 @@
       <think>
       <set name="Psexo">hombre</set>
       <set var="lista_local"><map name="r_sexo">hombre</map></set>
-      <set name="Posicion_actual">tiene barba</set>
+      <set name="Pregunta_actual">tiene barba</set>
       </think>
       <srai>
         PENSAR <get var="lista_local"/>
       </srai>
     </template>
-  </category>
+  </category> -->
 
-<!-- SI ES MUJER -->
-  <category>
-    <that> 
-      es hombre
-    </that>
-    <pattern>
-      <set>negaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_sexo">mujer</map></set>
-      <set name="Posicion_actual">tiene gafas</set>
-      <set name="Psexo">mujer</set>
-      <set name="Pbarba">no</set>
-      <set name="Pbigote">no</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category>
+<!-- CUANDO SE INVOCA REINICIA LAS VARIABLES GLOBALES-->
+<category>
+  <pattern>
+    FIN
+  </pattern>
+  <template>
+    <think>
+    <set name="Atributo_actual">unknown</set>
+    <set name="Pregunta_actual">unknown</set>
+    <set name="Lista_global">unknown</set>
+    <set name="Candidato">unknown</set>
+    <set name="Candidato_alternativo">unknown</set>
+    <set name="Ppelo">unknown</set>
+    <set name="Pojos">unknown</set>
+    <set name="Ppiel">unknown</set>
+    <set name="Pbarba">unknown</set>
+    <set name="Pbigote">unknown</set>
+    <set name="Pgafas">unknown</set>
+    <set name="Psexo">unknown</set>
+    </think>
+  </template>
+</category>
 
-<!-- BOT PREGUNTA: TIENE BARBA? -->
-<!-- SI TIENE BARBA-->
-  <category>
-    <that>
-      tiene barba
-    </that>
-    <pattern>
-      <set>afirmaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_barba">si</map></set>
-      <set name="Posicion_actual">tiene bigote</set>
-      <set name="Pbarba">si</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category>
+<!-- BOT PREGUNTA: EL PERSONAJE ES <STAR/>?-->
+<!-- RESPUESTA: SI-->
+<category>
+  <that>
+    El personaje es * 
+  </that>
+  <pattern>
+    <set>afirmaciones</set>
+  </pattern>
+  <template>
+    <srai> FIN </srai>
+  </template>
+</category>  
 
-<!-- NO TIENE BARBA-->
-  <category>
-    <that>
-      tiene barba
-    </that>
-    <pattern>
-      <set>negaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_barba">no</map></set>
-      <set name="Posicion_actual">tiene bigote</set>
-      <set name="Pbarba">no</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category>
 
-<!-- BOT PREGUNTA: TIENE BIGOTE? -->
-<!-- SI TIENE BIGOTE-->
-  <category>
-    <that>
-      tiene bigote
-    </that>
-    <pattern>
-      <set>afirmaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_bigote">si</map></set>
-      <set name="Posicion_actual">tiene gafas</set>
-      <set name="Pbigote">si</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category>
-  
-<!-- NO TIENE BIGOTE-->
-  <category>
-    <that>
-      tiene bigote
-    </that>
-    <pattern>
-      <set>negaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_bigote">no</map></set>
-      <set name="Posicion_actual">tiene gafas</set>
-      <set name="Pbigote">no</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category>
-
-<!-- BOT PREGUNTA: TIENE GAFAS? -->
-<!-- SI TIENE GAFAS-->
-  <category>
-    <that>
-      tiene gafas
-    </that>
-    <pattern>
-      <set>afirmaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_gafas">si</map></set>
-      <set name="Posicion_actual">tiene los ojos claros</set>
-      <set name="Pgafas">si</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category>
-  
-<!-- NO TIENE GAFAS-->
-  <category>
-    <that>
-      tiene gafas
-    </that>
-    <pattern>
-      <set>negaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_gafas">no</map></set>
-      <set name="Posicion_actual">tiene los ojos claros</set>
-      <set name="Pgafas"><set>negaciones</set></set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category>
-
-<!-- BOT PREGUNTA: TIENE LOS OJOS CLAROS? -->
-<!-- TIENE LOS OJOS CLAROS-->
-  <category>
-    <that>
-      tiene los ojos claros
-    </that>
-    <pattern>
-      <set>afirmaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_ojos">claros</map></set>
-      <set name="Posicion_actual">tiene la piel clara</set>
-      <set name="Pojos">claros</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category>
-  
-<!-- TIENE LA OJOS OSCUROS-->  
-  <category>
-    <that>
-      tiene los ojos claros
-    </that>
-    <pattern>
-      <set>negaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_ojos">oscuros</map></set>
-      <set name="Posicion_actual">tiene la piel clara</set>
-      <set name="Pojos">oscuros</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category>
-
-<!-- BOT PREGUNTA: TIENE LA PIEL CLARA?-->
-<!-- TIENE LA PIEL CLARA -->
-  <category>
-    <that>
-      tiene la piel clara
-    </that>
-    <pattern>
-      <set>afirmaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_piel">clara</map></set>
-      <set name="Ppiel">clara</set>
-      <set name="Posicion_actual">tiene pelo</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category>
-
-<!-- TIENE LA PIEL OSCURA -->
-  <category>
-    <that>
-      tiene la piel clara
-    </that>
-    <pattern>
-      <set>negaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_piel">oscura</map></set>
-      <set name="Ppiel">oscura</set>
-      <set name="Posicion_actual">tiene pelo</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category> 
-
-<!-- BOT PREGUNTA: TIENE PELO? -->
-<!-- ES CALVO-->
-  <category>
-    <that>
-      tiene pelo
-    </that>
-    <pattern>
-      <set>negaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_pelo">calvo</map></set>
-      <set name="Posicion_actual">es hombre</set>
-      <set name="Ppelo">calvo</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category>
-
-<!-- NO ES CALVO-->
-  <category>
-    <that>
-      tiene pelo
-    </that>
-    <pattern>
-      <set>afirmaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set name="Posicion_actual">tiene el pelo marron</set>
-      </think>
-      tiene el pelo marron
-    </template>
-  </category>
-  
-<!-- TIENE EL PELO MARRON-->
-  <category>
-    <that>
-     tiene el pelo marron 
-    </that>
-    <pattern>
-      <set>afirmaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_pelo">marron</map></set>
-      <set name="Posicion_actual">es hombre</set>
-      <set name="Ppelo">marron</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category>
-  
-<!-- NO TIENE EL PELO MARRON-->  
-  <category>
-    <that>
-     tiene el pelo marron 
-    </that>
-    <pattern>
-      <set>negaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set name="Posicion_actual">tiene el pelo rubio</set>
-      </think>
-      tiene el pelo rubio
-    </template>
-  </category>
-  
-<!-- TIENE EL PELO RUBIO-->
-  <category>
-    <that>
-     tiene el pelo rubio 
-    </that>
-    <pattern>
-      <set>afirmaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_pelo">rubio</map></set>
-      <set name="Posicion_actual">es hombre</set>
-      <set name="Ppelo">rubio</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category>
-  
-<!-- NO TIENE EL PELO RUBIO-->
-  <category>
-    <that>
-     tiene el pelo rubio
-    </that>
-    <pattern>
-      <set>negaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set name="Posicion_actual">tiene el pelo moreno</set>
-      </think>
-      tiene el pelo moreno
-    </template>
-  </category>
-  
-<!-- TIENE EL PELO MORENO-->
-  <category>
-    <that>
-     tiene el pelo moreno
-    </that>
-    <pattern>
-      <set>afirmaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_pelo">moreno</map></set>
-      <set name="Posicion_actual">es hombre</set>
-      <set name="Ppelo">moreno</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category>
-  
-<!-- NO TIENE EL PELO MORENO-->
-  <category>
-    <that>
-     tiene el pelo moreno
-    </that>
-    <pattern>
-      <set>negaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set name="Posicion_actual">tiene el pelo blanco</set>
-      </think>
-      tiene el pelo blanco
-    </template>
-  </category>
-  
-<!-- TIENE EL PELO BLANCO-->
-  <category>
-    <that>
-     tiene el pelo blanco
-    </that>
-    <pattern>
-      <set>afirmaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_pelo">blanco</map></set>
-      <set name="Posicion_actual">es hombre</set>
-      <set name="Ppelo">blanco</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category>
-  
-<!-- NO TIENE EL PELO BLANCO-->
-  <category>
-    <that>
-     tiene el pelo blanco
-    </that>
-    <pattern>
-      <set>negaciones</set>
-    </pattern>
-    <template>      
-      <think>
-      <set name="Posicion_actual">tiene el pelo pelirrojo</set>
-      </think>
-      tiene el pelo pelirrojo
-    </template>
-  </category>
-  
-<!-- TIENE EL PELO PELIRROJO-->
-  <category>
-    <that>
-     tiene el pelo pelirrojo
-    </that>
-    <pattern>
-      <set>afirmaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set var="lista_local"><map name="r_pelo">pelirrojo</map></set>
-      <set name="Ppelo">pelirrojo</set>
-      <set name="Posicion_actual">es hombre</set>
-      </think>
-      <srai>
-        PENSAR <get var="lista_local"/>
-      </srai>
-    </template>
-  </category>
-  
-<!-- NO TIENE EL PELO PELIRROJO-->
-  <category>
-    <that>
-     tiene el pelo pelirrojo
-    </that>
-    <pattern>
-      <set>negaciones</set>
-    </pattern>
-    <template>
-      <think>
-      <set name="Posicion_actual">es hombre</set>
-      </think>
-      es hombre
-    </template>
-  </category>
+<!-- RESPUESTA: NO-->
+<category>
+  <that>
+    El personaje es * 
+  </that>
+  <pattern>
+    <set>negaciones</set>
+  </pattern>
+  <template>
+    <condition name="Candidato_alternativo">
+      <li value="unknown">
+        <srai> TRAMPOSO </srai></li>
+      <li>
+        EL PERSONAJE ES <get name="Candidato_alternativo"/>
+        <think>
+          <set name="Candidato_alternativo">unknown</set>
+        </think></li>
+    </condition>
+  </template>
+</category>
 
 <!--            FIN Nivel 2                   -->
 </aiml>

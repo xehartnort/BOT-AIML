@@ -1,0 +1,12 @@
+sexo:es hombre
+barba:tiene barba
+bigote:tiene bigote
+gafas:tiene gafas
+ojos:tiene los ojos claros
+piel:tiene la piel clara
+pelo:es calvo
+pelo1:tiene el pelo rubio
+pelo2:tiene el pelo moreno
+pelo3:tiene el pelo marron
+pelo4:tiene el pelo blanco
+pelo5:tiene el pelo pelirrojo

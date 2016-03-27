@@ -1,0 +1,12 @@
+sexo:barba
+barba:bigote
+bigote:gafas
+gafas:ojos
+ojos:piel
+piel:pelo
+pelo:pelo1
+pelo1:pelo2
+pelo2:pelo3
+pelo3:pelo4
+pelo4:pelo5
+pelo5:sexo
