@@ -618,18 +618,12 @@ CANDIDATO-->
   </template>  
 </category>
 
-<!-- FUNCION QUE OBTIENE LA SIGUIENTE PREGUNTA QUE DESCARTE A ALGÚN PERSONAJE-->
-<!-- Genera error too much recursion, repasar-->
-<!-- Caso de especial problemática cuando el personaje es rubio-->
 <category>
   <pattern>
-    NEXT_QUESTION 
+    CLASIFICAR_ATRIBUTO
   </pattern>
   <template>
     <think>
-    <set name="Atributo_actual">
-      <map name="s_atributo"><get name="Atributo_actual"/></map>
-    </set>
     <condition name="Atributo_actual">
       <li value="ojos">
         <set name="Lista1"><map name="r_ojos">claros</map></set>
@@ -724,30 +718,45 @@ CANDIDATO-->
         <set name="Atributo2">no</set>
       </li>
     </condition>
-    <!-- Si la intersección resultante es vacía entonces vale -->
-    <set var="respuesta1">
-      <srai> COMPARE 
-        <srai>COUNT 
-          <srai>INTERSEC <get name="Lista_global"/> AND <get name="Lista1"/> 
-        </srai>
-      </srai> WITH 0
-    </srai>
-    </set>
-    <set var="respuesta2">
-      <srai> COMPARE 
-        <srai>COUNT 
-          <srai>INTERSEC <get name="Lista_global"/> AND <get name="Lista2"/> 
-        </srai>
-      </srai> WITH 0
-    </srai>
-    </set>
+    </think>
+  </template>
+</category>
+
+<!-- FUNCION QUE OBTIENE LA SIGUIENTE PREGUNTA QUE DESCARTE A ALGÚN PERSONAJE-->
+<category>
+  <pattern>
+    NEXT_QUESTION 
+  </pattern>
+  <template>
+    <think>
     <condition var="respuesta1">
-      <li value="SI">
-        <srai> NEXT_QUESTION </srai></li>
-    </condition>
-    <condition var="respuesta2">
-      <li value="SI"> 
-        <srai> NEXT_QUESTION </srai></li>
+      <li value="NO"></li>
+      <li>
+        <set name="Atributo_actual">
+          <map name="s_atributo"><get name="Atributo_actual"/></map></set>
+        <srai> CLASIFICAR_ATRIBUTO </srai>
+        <!-- Si la intersección resultante es vacía entonces vale -->
+        <set var="respuesta1">
+          <srai> COMPARE 
+            <srai>COUNT 
+              <srai>INTERSEC <get name="Lista_global"/> AND <get name="Lista1"/> 
+            </srai>
+          </srai> WITH 0 </srai>
+        </set>
+        <condition var="respuesta1">
+          <li value="NO">
+            <set var="respuesta2">
+              <srai> COMPARE 
+                <srai>COUNT 
+                  <srai>INTERSEC <get name="Lista_global"/> AND <get name="Lista2"/> 
+                </srai>
+              </srai> WITH 0 </srai>
+            </set>
+            <set var="respuesta1"><get var="respuesta2"/></set>
+          </li>    
+        </condition>
+        <loop/>
+      </li>
     </condition>
     </think>
     <map name="pregunta_asociada"><get name="Atributo_actual"/></map>
