@@ -335,27 +335,13 @@
         </srai>
       </set> 
     <!-- ATRIBUTOS DEL PERSONAJE ESCOGIDO-->
-    <set name="Ppelo">
-      <map name="pelo"><get name="personaje"/></map>
-    </set>
-    <set name="Pojos">
-      <map name="ojos"><get name="personaje"/></map>
-    </set>
-    <set name="Ppiel">
-      <map name="piel"><get name="personaje"/></map>
-    </set>
-    <set name="Pbarba">
-      <map name="barba"><get name="personaje"/></map>
-    </set>
-    <set name="Pbigote">
-      <map name="bigote"><get name="personaje"/></map>
-    </set>
-    <set name="Pgafas">
-      <map name="gafas"><get name="personaje"/></map>
-    </set>
-    <set name="Psexo">
-      <map name="sexo"><get name="personaje"/></map>
-    </set>
+    <set name="Ppelo"><map name="pelo"><get name="personaje"/></map></set>
+    <set name="Pojos"><map name="ojos"><get name="personaje"/></map></set>
+    <set name="Ppiel"><map name="piel"><get name="personaje"/></map></set>
+    <set name="Pbarba"><map name="barba"><get name="personaje"/></map></set>
+    <set name="Pbigote"><map name="bigote"><get name="personaje"/></map></set>
+    <set name="Pgafas"><map name="gafas"><get name="personaje"/></map></set>
+    <set name="Psexo"><map name="sexo"><get name="personaje"/></map></set>
     </think>
       A jugar 
   </template>
@@ -526,6 +512,13 @@
     continuar
   </pattern>
   <template>
+    <think>
+    <condition name="Pregunta_actual">
+      <li value="unknown">
+        <set name="Atributo_actual">unknown</set>
+      </li>
+    </condition>
+    </think>
     <srai> # jugar # 2 # </srai>
   </template>
 </category>
@@ -606,7 +599,7 @@ CANDIDATO-->
       </think>
       <condition name="Candidato">
         <li value="trampa">
-          <srai> TRAMPOSO </srai></li>
+          <srai> IMPOSIBLE </srai></li>
         <li value="unknown">
           <srai> NEXT_QUESTION </srai></li>
         <li>
@@ -620,7 +613,7 @@ CANDIDATO-->
 
 <category>
   <pattern>
-    CLASIFICAR_ATRIBUTO
+    CLASIFICAR_ATRIBUTO_ACTUAL
   </pattern>
   <template>
     <condition name="Atributo_actual">
@@ -646,7 +639,6 @@ CANDIDATO-->
           <map name="r_pelo">blanco</map>
           <map name="r_pelo">pelirrojo</map>
         </set>
-        <set name="Atributo2">si</set>
       </think></li>
       <li value="pelo1"><think>
         <set name="Lista1"><map name="r_pelo">rubio</map></set>
@@ -726,7 +718,7 @@ CANDIDATO-->
       <li><think>
         <set name="Atributo_actual">
           <map name="s_atributo"><get name="Atributo_actual"/></map></set>
-        <srai> CLASIFICAR_ATRIBUTO </srai>
+        <srai> CLASIFICAR_ATRIBUTO_ACTUAL </srai>
         <!-- Si la intersección resultante es vacía entonces vale -->
         <set var="respuesta1">
           <srai> COMPARE 
@@ -756,11 +748,11 @@ CANDIDATO-->
 
 <category>
   <pattern>
-    TRAMPOSO
+    IMPOSIBLE
   </pattern>
   <template>
     No hay ningún personaje con las siguientes caracteristicas:
-      Con pelo: <get name="Ppelo"/>
+        Sin pelo: <get name="Ppelo"/>
         Rubio: <get name="Ppelo1"/>
         Moreno: <get name="Ppelo2"/>
         Marron: <get name="Ppelo3"/>
@@ -787,6 +779,7 @@ CANDIDATO-->
   </pattern>
   <template>
     <condition name="Atributo_actual">
+      <li value="pelo"><think><set name="Ppelo">calvo</set></think></li>
       <li value="pelo1"><think><set name="Ppelo1">rubio</set></think></li>
       <li value="pelo2"><think><set name="Ppelo2">moreno</set></think></li>
       <li value="pelo3"><think><set name="Ppelo3">marron</set></think></li>
@@ -816,6 +809,7 @@ CANDIDATO-->
   </pattern>
   <template>
     <condition name="Atributo_actual">
+      <li value="pelo"><think><set name="Ppelo">no</set></think></li>
       <li value="pelo1"><think><set name="Ppelo1">no</set></think></li>
       <li value="pelo2"><think><set name="Ppelo2">no</set></think></li>
       <li value="pelo3"><think><set name="Ppelo3">no</set></think></li>
@@ -874,10 +868,11 @@ CANDIDATO-->
   </pattern>
   <template>
     <srai> FIN </srai>
+    Fin del juego 2
   </template>
 </category>  
 
-
+<!-- BOT PREGUNTA: EL PERSONAJE ES <STAR/>?-->
 <!-- RESPUESTA: NO-->
 <category>
   <that>
@@ -889,7 +884,7 @@ CANDIDATO-->
   <template>
     <condition name="Candidato_alternativo">
       <li value="unknown">
-        <srai> TRAMPOSO </srai></li>
+        <srai> IMPOSIBLE </srai></li>
       <li>
         EL PERSONAJE ES <get name="Candidato_alternativo"/>
         <think>
@@ -899,5 +894,142 @@ CANDIDATO-->
   </template>
 </category>
 
-<!--            FIN Nivel 2                   -->
+<!-- DECTECTOR DE TRAMPA EN CASO DE CORRECIÓN DE PERSONAJE-->
+<!-- BOT PREGUNTA: EL PERSONAJE ES <STAR/>?-->
+<!-- RESPUESTA: NO, EL PERSONAJE ES ALGUIEN-->
+<category>
+  <that>
+    EL PERSONAJE ES <set>personajes</set>
+  </that>
+  <pattern>
+    no, es <set>personajes</set> 
+  </pattern>
+  <template>
+    <think>
+    <set var="ppelo"><map name="pelo"><star/></map></set>
+    <set var="pojos"><map name="ojos"><star/></map></set>
+    <set var="ppiel"><map name="piel"><star/></map></set>
+    <set var="pbarba"><map name="barba"><star/></map></set>
+    <set var="pbigote"><map name="bigote"><star/></map></set>
+    <set var="pgafas"><map name="gafas"><star/></map></set>
+    <set var="psexo"><map name="sexo"><star/></map></set>
+    </think>
+    <condition name="Pojos">
+      <li value="unknown"></li>
+      <li><value><get var="pojos"/></value></li>
+      <li> 
+eres un tramposo, dijiste que tenia los ojos <get name="Pojos"/> pero <star/> lo tiene <get var="pojos"/>
+        <srai> fin </srai>
+      </li>
+    </condition>
+    <condition name="Ppiel">
+      <li value="unknown"></li>
+      <li><value><get var="ppiel"/></value></li>
+      <li> 
+eres un tramposo, dijiste que tenia la piel <get name="Ppiel"/> pero <star/> la tiene <get var="ppiel"/>
+        <srai> FIN </srai>
+      </li>
+    </condition>
+    <condition name="Pbarba">
+      <li value="unknown"></li>
+      <li><value><get var="pbarba"/></value></li>
+      <li> 
+eres un tramposo, dijiste que <get name="Pbarba"/> tenia barba pero
+        <star/> <get var="pbarba"/> tiene 
+        <srai> FIN </srai>
+      </li>
+    </condition>
+    <condition name="Pbigote">
+      <li value="unknown"></li>
+      <li><value><get var="pbigote"/></value></li>
+      <li> 
+eres un tramposo, dijiste que <get name="Pbigote"/> tenia bigote pero <star/> <get var="pbigote"/> tiene
+        <srai> FIN </srai>
+      </li>
+    </condition>
+    <condition name="Pgafas">
+      <li value="unknown"></li>
+      <li><value><get var="pgafas"/></value></li>
+      <li> 
+eres un tramposo, dijiste que <get name="Pgafas"/> tenia gafas pero <star/> <get var="pgafas"/> tiene
+        <srai> FIN </srai>
+      </li>
+    </condition>
+    <condition name="Psexo">
+      <li value="unknown"></li>
+      <li><value><get var="psexo"/></value></li>
+      <li> 
+eres un tramposo, dijiste que era <get name="Psexo"/> pero <star/> es <get var="psexo"/> 
+        <srai> FIN </srai>
+      </li>
+    </condition>
+    <condition name="Ppelo"> 
+      <li value="calvo">
+        <condition var="ppelo">
+          <li value="calvo"></li>
+          <li>
+eres un tramposo, dijiste que era calvo pero <star/> no es calvo
+            <srai> FIN </srai>
+          </li>
+        </condition>
+      </li>
+    </condition>
+    <condition name="Ppelo1"> 
+      <li value="rubio">
+        <condition var="ppelo">
+          <li value="rubio"></li>
+          <li>
+eres un tramposo, dijiste que tiene el pelo rubio pero <star/> no lo tiene rubio
+            <srai> FIN </srai>
+          </li>
+        </condition>
+      </li>
+    </condition>
+    <condition name="Ppelo2"> 
+      <li value="moreno">
+        <condition var="ppelo">
+          <li value="moreno"></li>
+          <li>
+eres un tramposo, dijiste que tiene el pelo moreno pero <star/> no lo tiene moreno
+            <srai> FIN </srai>
+          </li>
+        </condition>
+      </li>
+    </condition>
+    <condition name="Ppelo3"> 
+      <li value="marron">
+        <condition var="ppelo">
+          <li value="marron"></li>
+          <li>
+eres un tramposo, dijiste que tiene el pelo marron pero <star/> no lo tiene marron
+            <srai> FIN </srai>
+          </li>
+        </condition>
+      </li>
+    </condition>
+    <condition name="Ppelo4"> 
+      <li value="blanco">
+        <condition var="ppelo">
+          <li value="blanco"></li>
+          <li>
+eres un tramposo, dijiste que tiene el pelo blanco pero <star/> no lo tiene blanco
+            <srai> FIN </srai>
+          </li>
+        </condition>
+      </li>
+    </condition>
+    <condition name="Ppelo5"> 
+      <li value="pelirrojo">
+        <condition var="ppelo">
+          <li value="pelirrojo"></li>
+          <li>
+eres un tramposo, dijiste que tiene el pelo pelirrojo pero <star/> no lo tiene pelirrojo
+            <srai> FIN </srai>
+          </li>
+        </condition>
+      </li>
+    </condition>
+  </template>
+</category>
+<!--            FIN Nivel 2 y 3                  -->
 </aiml>
