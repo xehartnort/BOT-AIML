@@ -647,7 +647,7 @@ CANDIDATO-->
           <map name="r_pelo">blanco</map>
           <map name="r_pelo">pelirrojo</map>
         </set>
-        <set name="Atributo2">no calvo</set>
+        <set name="Atributo2">no</set>
       </li>
       <li value="pelo1">
         <set name="Lista1"><map name="r_pelo">rubio</map></set>
@@ -659,7 +659,6 @@ CANDIDATO-->
           <map name="r_pelo">blanco</map>
           <map name="r_pelo">pelirrojo</map>
         </set>
-        <set name="Atributo2">no rubio</set>
       </li>
       <li value="pelo2">
         <set name="Lista1"><map name="r_pelo">moreno</map></set>
@@ -671,7 +670,6 @@ CANDIDATO-->
           <map name="r_pelo">blanco</map>
           <map name="r_pelo">pelirrojo</map>
         </set>
-        <set name="Atributo2">no moreno</set>
       </li>
       <li value="pelo3">
         <set name="Lista1"><map name="r_pelo">marron</map></set>
@@ -683,7 +681,6 @@ CANDIDATO-->
           <map name="r_pelo">blanco</map>
           <map name="r_pelo">pelirrojo</map>
         </set>
-        <set name="Atributo2">no marron</set>
       </li>
       <li value="pelo4">
         <set name="Lista1"><map name="r_pelo">blanco</map></set>
@@ -695,7 +692,6 @@ CANDIDATO-->
           <map name="r_pelo">moreno</map>
           <map name="r_pelo">pelirrojo</map>
         </set>
-        <set name="Atributo2">no blanco</set>
       </li>
       <li value="pelo5">
         <set name="Lista1"><map name="r_pelo">pelirrojo</map></set>
@@ -707,9 +703,8 @@ CANDIDATO-->
           <map name="r_pelo">moreno</map>
           <map name="r_pelo">blanco</map>
         </set>
-        <set name="Atributo2">no pelirrojo</set>
       </li>
-      <li><!--SEXO, BIGOTE Y GAFAS SON PREGUNTAS BINARIAS-->
+      <li><!--SEXO, BIGOTE Y GAFAS SON PREGUNTAS BINARIAS TIPO SI O NO-->
         <set name="Lista1">
           <map><name>r_<get name="Atributo_actual"/></name>si</map></set>
         <set name="Atributo1">si</set>
@@ -769,7 +764,12 @@ CANDIDATO-->
   </pattern>
   <template>
     No hay ningún personaje con las siguientes caracteristicas:
-      Pelo: <get name="Ppelo"/>
+      Con pelo: <get name="Ppelo"/>
+        Rubio: <get name="Ppelo1"/>
+        Moreno: <get name="Ppelo2"/>
+        Marron: <get name="Ppelo3"/>
+        Blanco: <get name="Ppelo4"/>
+        Pelirrojo: <get name="Ppelo5"/>
       Piel: <get name="Ppiel"/>
       Ojos: <get name="Pojos"/>
       Barba: <get name="Pbarba"/>
@@ -792,11 +792,11 @@ CANDIDATO-->
   <template>
     <think>
     <condition name="Atributo_actual">
-      <li value="pelo1"><set name="Ppelo">rubio</set></li>
-      <li value="pelo2"><set name="Ppelo">moreno</set></li>
-      <li value="pelo3"><set name="Ppelo">marron</set></li>
-      <li value="pelo4"><set name="Ppelo">blanco</set></li>
-      <li value="pelo5"><set name="Ppelo">pelirrojo</set></li>
+      <li value="pelo1"><set name="Ppelo1">rubio</set></li>
+      <li value="pelo2"><set name="Ppelo2">moreno</set></li>
+      <li value="pelo3"><set name="Ppelo3">marron</set></li>
+      <li value="pelo4"><set name="Ppelo4">blanco</set></li>
+      <li value="pelo5"><set name="Ppelo5">pelirrojo</set></li>
       <li>
         <set><name>P<get name="Atributo_actual"/></name>
           <get name="Atributo1"/>
@@ -829,11 +829,11 @@ CANDIDATO-->
       <map name="pregunta_asociada">
         <get name="Atributo_actual"/></map></set>
     <condition name="Atributo_actual">
-      <li value="pelo1"><set name="Ppelo">no rubio</set></li>
-      <li value="pelo2"><set name="Ppelo">no moreno</set></li>
-      <li value="pelo3"><set name="Ppelo">no marron</set></li>
-      <li value="pelo4"><set name="Ppelo">no blanco</set></li>
-      <li value="pelo5"><set name="Ppelo">no pelirrojo</set></li>
+      <li value="pelo1"><set name="Ppelo1">no</set></li>
+      <li value="pelo2"><set name="Ppelo2">no</set></li>
+      <li value="pelo3"><set name="Ppelo3">no</set></li>
+      <li value="pelo4"><set name="Ppelo4">no</set></li>
+      <li value="pelo5"><set name="Ppelo5">no</set></li>
       <li>
         <set><name>P<get name="Atributo_actual"/></name>
           <get name="Atributo2"/>
