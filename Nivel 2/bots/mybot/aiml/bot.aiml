@@ -623,21 +623,20 @@ CANDIDATO-->
     CLASIFICAR_ATRIBUTO
   </pattern>
   <template>
-    <think>
     <condition name="Atributo_actual">
-      <li value="ojos">
+      <li value="ojos"><think>
         <set name="Lista1"><map name="r_ojos">claros</map></set>
         <set name="Atributo1">claros</set>
         <set name="Lista2"><map name="r_ojos">oscuros</map></set>
         <set name="Atributo2">oscuros</set>
-      </li>
-      <li value="piel">
+      </think></li>
+      <li value="piel"><think>
         <set name="Lista1"><map name="r_piel">clara</map></set>
         <set name="Atributo1">clara</set>
         <set name="Lista2"><map name="r_piel">oscura</map></set>
         <set name="Atributo2">oscura</set>
-      </li>
-      <li value="pelo">
+      </think></li>
+      <li value="pelo"><think>
         <set name="Lista1"><map name="r_pelo">calvo</map></set>
         <set name="Atributo1">calvo</set>
         <set name="Lista2">
@@ -647,9 +646,9 @@ CANDIDATO-->
           <map name="r_pelo">blanco</map>
           <map name="r_pelo">pelirrojo</map>
         </set>
-        <set name="Atributo2">no</set>
-      </li>
-      <li value="pelo1">
+        <set name="Atributo2">si</set>
+      </think></li>
+      <li value="pelo1"><think>
         <set name="Lista1"><map name="r_pelo">rubio</map></set>
         <set name="Atributo1">rubio</set>
         <set name="Lista2">
@@ -659,8 +658,8 @@ CANDIDATO-->
           <map name="r_pelo">blanco</map>
           <map name="r_pelo">pelirrojo</map>
         </set>
-      </li>
-      <li value="pelo2">
+      </think></li>
+      <li value="pelo2"><think>
         <set name="Lista1"><map name="r_pelo">moreno</map></set>
         <set name="Atributo1">moreno</set>
         <set name="Lista2">
@@ -670,8 +669,8 @@ CANDIDATO-->
           <map name="r_pelo">blanco</map>
           <map name="r_pelo">pelirrojo</map>
         </set>
-      </li>
-      <li value="pelo3">
+      </think></li>
+      <li value="pelo3"><think>
         <set name="Lista1"><map name="r_pelo">marron</map></set>
         <set name="Atributo1">marron</set>
         <set name="Lista2">
@@ -681,8 +680,8 @@ CANDIDATO-->
           <map name="r_pelo">blanco</map>
           <map name="r_pelo">pelirrojo</map>
         </set>
-      </li>
-      <li value="pelo4">
+      </think></li>
+      <li value="pelo4"><think>
         <set name="Lista1"><map name="r_pelo">blanco</map></set>
         <set name="Atributo1">blanco</set>
         <set name="Lista2">
@@ -692,8 +691,8 @@ CANDIDATO-->
           <map name="r_pelo">moreno</map>
           <map name="r_pelo">pelirrojo</map>
         </set>
-      </li>
-      <li value="pelo5">
+      </think></li>
+      <li value="pelo5"><think>
         <set name="Lista1"><map name="r_pelo">pelirrojo</map></set>
         <set name="Atributo1">pelirrojo</set>
         <set name="Lista2">
@@ -703,17 +702,16 @@ CANDIDATO-->
           <map name="r_pelo">moreno</map>
           <map name="r_pelo">blanco</map>
         </set>
-      </li>
-      <li><!--SEXO, BIGOTE Y GAFAS SON PREGUNTAS BINARIAS TIPO SI O NO-->
+      </think></li>
+      <li><think><!--SEXO, BIGOTE Y GAFAS SON PREGUNTAS BINARIAS TIPO SI O NO-->
         <set name="Lista1">
           <map><name>r_<get name="Atributo_actual"/></name>si</map></set>
         <set name="Atributo1">si</set>
         <set name="Lista2">
           <map><name>r_<get name="Atributo_actual"/></name>no</map></set>
         <set name="Atributo2">no</set>
-      </li>
+      </think></li>
     </condition>
-    </think>
   </template>
 </category>
 
@@ -723,10 +721,9 @@ CANDIDATO-->
     NEXT_QUESTION 
   </pattern>
   <template>
-    <think>
     <condition var="respuesta1">
       <li value="NO"></li>
-      <li>
+      <li><think>
         <set name="Atributo_actual">
           <map name="s_atributo"><get name="Atributo_actual"/></map></set>
         <srai> CLASIFICAR_ATRIBUTO </srai>
@@ -737,9 +734,9 @@ CANDIDATO-->
               <srai>INTERSEC <get name="Lista_global"/> AND <get name="Lista1"/> 
             </srai>
           </srai> WITH 0 </srai>
-        </set>
+        </set></think>
         <condition var="respuesta1">
-          <li value="NO">
+          <li value="NO"><think>
             <set var="respuesta2">
               <srai> COMPARE 
                 <srai>COUNT 
@@ -748,12 +745,11 @@ CANDIDATO-->
               </srai> WITH 0 </srai>
             </set>
             <set var="respuesta1"><get var="respuesta2"/></set>
-          </li>    
+          </think></li>    
         </condition>
         <loop/>
       </li>
     </condition>
-    </think>
     <map name="pregunta_asociada"><get name="Atributo_actual"/></map>
   </template>
 </category>
@@ -790,27 +786,23 @@ CANDIDATO-->
     <set>afirmaciones</set>
   </pattern>
   <template>
-    <think>
     <condition name="Atributo_actual">
-      <li value="pelo1"><set name="Ppelo1">rubio</set></li>
-      <li value="pelo2"><set name="Ppelo2">moreno</set></li>
-      <li value="pelo3"><set name="Ppelo3">marron</set></li>
-      <li value="pelo4"><set name="Ppelo4">blanco</set></li>
-      <li value="pelo5"><set name="Ppelo5">pelirrojo</set></li>
-      <li>
+      <li value="pelo1"><think><set name="Ppelo1">rubio</set></think></li>
+      <li value="pelo2"><think><set name="Ppelo2">moreno</set></think></li>
+      <li value="pelo3"><think><set name="Ppelo3">marron</set></think></li>
+      <li value="pelo4"><think><set name="Ppelo4">blanco</set></think></li>
+      <li value="pelo5"><think><set name="Ppelo5">pelirrojo</set></think></li>
+      <li><think>
         <set><name>P<get name="Atributo_actual"/></name>
           <get name="Atributo1"/>
         </set>
-      </li>
+      </think></li>
     </condition>
-    </think>
     <srai> PENSAR <get name="Lista1"/> </srai>
     <think>
     <set name="Pregunta_actual">
       <map name="pregunta_asociada">
-        <get name="Atributo_actual"/></map></set>
-
-    </think>
+        <get name="Atributo_actual"/></map></set></think>
   </template>
 </category>
 
@@ -823,24 +815,23 @@ CANDIDATO-->
     <set>negaciones</set>
   </pattern>
   <template>
+    <condition name="Atributo_actual">
+      <li value="pelo1"><think><set name="Ppelo1">no</set></think></li>
+      <li value="pelo2"><think><set name="Ppelo2">no</set></think></li>
+      <li value="pelo3"><think><set name="Ppelo3">no</set></think></li>
+      <li value="pelo4"><think><set name="Ppelo4">no</set></think></li>
+      <li value="pelo5"><think><set name="Ppelo5">no</set></think></li>
+      <li><think>
+        <set><name>P<get name="Atributo_actual"/></name>
+          <get name="Atributo2"/>
+        </set>
+      </think></li>
+    </condition>
     <srai> PENSAR <get name="Lista2"/> </srai>
     <think>
     <set name="Pregunta_actual">
       <map name="pregunta_asociada">
-        <get name="Atributo_actual"/></map></set>
-    <condition name="Atributo_actual">
-      <li value="pelo1"><set name="Ppelo1">no</set></li>
-      <li value="pelo2"><set name="Ppelo2">no</set></li>
-      <li value="pelo3"><set name="Ppelo3">no</set></li>
-      <li value="pelo4"><set name="Ppelo4">no</set></li>
-      <li value="pelo5"><set name="Ppelo5">no</set></li>
-      <li>
-        <set><name>P<get name="Atributo_actual"/></name>
-          <get name="Atributo2"/>
-        </set>
-      </li>
-    </condition>
-    </think>
+        <get name="Atributo_actual"/></map></set></think>
   </template>
 </category>
 
@@ -857,6 +848,11 @@ CANDIDATO-->
     <set name="Candidato">unknown</set>
     <set name="Candidato_alternativo">unknown</set>
     <set name="Ppelo">unknown</set>
+    <set name="Ppelo1">unknown</set>
+    <set name="Ppelo2">unknown</set>
+    <set name="Ppelo3">unknown</set>
+    <set name="Ppelo4">unknown</set>
+    <set name="Ppelo5">unknown</set>
     <set name="Pojos">unknown</set>
     <set name="Ppiel">unknown</set>
     <set name="Pbarba">unknown</set>

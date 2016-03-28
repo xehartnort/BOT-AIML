@@ -207,23 +207,24 @@
         ITERATE <get var="conj1"/>
       </srai>
     </set>
+    </think>
     <condition var="iterador">
       <li value="end"></li>
-      <li>
+      <li><think>
         <set var="pertenecia">
           <srai> 
             FINDITEM <get var="iterador"/> IN <get var="conj2"/>
           </srai>
-        </set>
+        </set></think>
         <condition var="pertenecia">
-          <li value="0">
+          <li value="0"><think>
             <set var="iterador">
               <srai>
                 NEXT
               </srai>
             </set>
-          </li>
-          <li>
+          </think></li>
+          <li><think>
             <set var="resultado">
               <srai> 
                 ADDITEM <get var="iterador"/> IN <get var="resultado"/>
@@ -234,11 +235,12 @@
                 NEXT
               </srai>
             </set>
-          </li>
+          </think></li>
         </condition>
         <loop/>
       </li>
     </condition>
+    <think>
     <set var="resultado">
       <srai>
         REMOVEITEM 
